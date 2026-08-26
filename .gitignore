@@ -1,0 +1,40 @@
+# ============== 通用 ==============
+.DS_Store
+Thumbs.db
+*.log
+*.iml
+.idea/
+.vscode/
+*.swp
+
+# ============== Java/Maven 后端 ==============
+backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+backend/HELP.md
+backend/*.iml
+backend/logs/
+
+# BGE 模型文件（太大不进版本库，本地下载）
+backend/models/
+
+# ============== Node/前端 ==============
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/npm-debug.log*
+frontend/yarn-error.log*
+
+# ============== Milvus ==============
+milvus/
+!milvus/.gitkeep
+
+# ============== 环境/密钥 ==============
+*.env.local
+application-local.yml
+application-secret.yml
+
+# ============== 操作系统 ==============
+.DS_Store
+Desktop.ini

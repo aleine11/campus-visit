@@ -1,0 +1,70 @@
+# ============================================================
+# 校园参观预约与智能咨询系统 - 后端配置文件
+# ============================================================
+
+server:
+  port: 8088  # 后端服务端口，避免和常用 8080 冲突
+  servlet:
+    context-path: /api  # 所有接口统一前缀，前端调用形如 http://localhost:8088/api/xxx
+
+spring:
+  application:
+    name: campus-visit
+  profiles:
+    active: dev  # 默认使用开发环境配置
+
+  # 文件上传大小限制（管理员上传知识库 PDF/Word 用）
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true  # 数据库下划线自动转驼峰 user_name -> userName
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 控制台打印 SQL，开发期方便调试
+  global-config:
+    db-config:
+      id-type: auto  # 主键策略：数据库自增
+      logic-delete-field: deleted  # 全局逻辑删除字段（如需用逻辑删除可开启）
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# 项目自定义业务配置
+campus:
+  # JWT 鉴权配置
+  jwt:
+    secret: "campus-visit-secret-key-2026-harbin-cambridge-college-very-long"  # JWT 签名密钥（生产建议换）
+    expiration: 86400000  # 令牌有效期 24 小时（毫秒）
+    header: Authorization  # 前端请求头字段名
+
+  # 阿里百炼 DashScope 大模型配置
+  dashscope:
+    api-key: "你的百炼API-KEY"  # ⚠️ 必填：去阿里云百炼平台 https://dashscope.aliyun.com 申请
+    model: "qwen-plus"  # 通义千问模型：qwen-turbo 快、qwen-plus 均衡、qwen-max 强
+    embedding-model: "text-embedding-v2"  # 备用云端嵌入模型，BGE 本地跑挂掉时降级使用
+    timeout: 30000  # 大模型调用超时 30 秒
+
+  # BGE-small-zh 嵌入模型配置（本地）
+  bge:
+    model-path: "./models/bge-small-zh-v1.5"  # 本地模型路径
+    vector-dim: 768  # BGE-small-zh 输出向量维度
+
+  # Milvus 向量数据库配置
+  milvus:
+    host: "127.0.0.1"
+    port: 19530  # Milvus gRPC 端口
+    collection-name: "campus_knowledge"  # 集合名（与设计文档一致）
+    top-k: 3  # 检索 top-K 相似片段，设计文档固定 3
+
+  # RAG 业务参数
+  rag:
+    chunk-size: 500  # 文本分块大小：500 字
+    chunk-overlap: 100  # 块重叠：100 字，保证上下文连续
+    no-answer-tip: "知识库未查询到相关内容，请咨询人工老师。禁止编造任何信息。"  # 强约束固定话术
+
+logging:
+  level:
+    com.campus.visit: debug  # 项目代码日志级别
+    org.springframework: warn
