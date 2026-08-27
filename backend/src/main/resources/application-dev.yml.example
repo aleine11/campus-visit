@@ -1,0 +1,17 @@
+# ============================================================
+# 开发环境配置模板
+#
+# 使用方法：
+#   1. 复制本文件为 application-dev.yml（去掉 .example 后缀）
+#   2. 把下面的占位符改成你的真实值
+#   3. application-dev.yml 已被 .gitignore 忽略，不会被上传
+#
+# ⚠️ 真实的 application-dev.yml 含密码/密钥，禁止提交到 Git！
+# ============================================================
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/campus_visit?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: "你的MySQL密码"   # ← 改成你的真实密码

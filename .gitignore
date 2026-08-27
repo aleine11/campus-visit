@@ -31,6 +31,9 @@ milvus/
 !milvus/.gitkeep
 
 # ============== 环境/密钥 ==============
+# 真实密码/密钥配置只存本地，禁止上传（模板见同名 .example 文件）
+backend/src/main/resources/application-dev.yml
+backend/src/main/resources/application-prod.yml
 *.env.local
 application-local.yml
 application-secret.yml
