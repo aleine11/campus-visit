@@ -23,12 +23,12 @@
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <mysql.version>8.0.33</mysql.version>
         <jjwt.version>0.12.5</jjwt.version>
-        <hutool.version>3.2.0</hutool.version>
+        <hutool.version>5.8.27</hutool.version>
         <pdfbox.version>3.0.1</pdfbox.version>
         <poi.version>5.2.5</poi.version>
         <milvus.version>2.3.4</milvus.version>
-        <dashscope-sdk.version>1.20.0</dashscope-sdk.version>
         <djl.version>0.24.0</djl.version>
+        <dashscope-sdk.version>2.20.6</dashscope-sdk.version>
     </properties>
 
     <dependencies>
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.27</version>
+            <version>${hutool.version}</version>
         </dependency>
 
         <!-- Lombok：用注解代替 getter/setter -->
@@ -146,10 +146,12 @@
             <artifactId>pytorch-engine</artifactId>
             <version>${djl.version}</version>
         </dependency>
+        <!-- PyTorch 原生库（版本格式 = PyTorch版本-DJL版本，必须用官方发布的配对组合） -->
+        <!-- DJL 0.24.0 官方配对的 PyTorch 版本是 2.0.1，已在中央仓库和阿里云镜像双重验证存在 -->
         <dependency>
             <groupId>ai.djl.pytorch</groupId>
-            <artifactId>pytorch-native-auto</artifactId>
-            <version>2.1.2</version>
+            <artifactId>pytorch-jni</artifactId>
+            <version>2.0.1-0.24.0</version>
             <scope>runtime</scope>
         </dependency>
 
