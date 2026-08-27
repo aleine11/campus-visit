@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <title>登录 - 校园参观预约与智能咨询系统</title>
+  <link rel="stylesheet" href="css/common.css">
+  <style>
+    /* 使用 common.css 的 page-wrapper--gradient 统一渐变背景，零网络请求，无 backdrop-filter */
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .login-card {
+      position: relative;
+      z-index: 2;
+      width: 440px;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .login-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 600;
+      color: #303133;
+      margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: #909399;
+      margin-bottom: 32px;
+    }
+
+    /* 修复输入框排版：label 改为顶部 block 布局，输入框全宽 */
+    .login-form .form-group {
+      margin-bottom: 20px;
+    }
+
+    .login-form .form-group label {
+      display: block;
+      font-size: 13px;
+      color: #606266;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .login-form .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #DCDFE6;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      transition: all .2s;
+      box-sizing: border-box;
+    }
+
+    .login-form .form-group input:focus {
+      border-color: #409EFF;
+      box-shadow: 0 0 0 3px rgba(64, 158, 255, 0.15);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #409EFF 0%, #667eea 100%);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+      margin-top: 8px;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(64, 158, 255, 0.4);
+    }
+
+    .login-secondary {
+      width: 100%;
+      padding: 12px;
+      background: #fff;
+      color: #606266;
+      border: 1px solid #DCDFE6;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+      display: inline-block;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .login-secondary:hover {
+      border-color: #409EFF;
+      color: #409EFF;
+    }
+
+    .login-footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 13px;
+      color: #909399;
+    }
+
+    .login-footer a {
+      color: #409EFF;
+      margin: 0 6px;
+    }
+
+    .login-tip {
+      margin-top: 16px;
+      font-size: 12px;
+      color: #c0c4cc;
+      text-align: center;
+    }
+
+    .brand-logo {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #409EFF 0%, #667eea 100%);
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 28px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrapper page-wrapper--gradient login-page">
+    <div class="login-card">
+      <div class="brand-logo">剑</div>
+      <div class="login-title">校园参观预约与智能咨询系统</div>
+      <div class="login-subtitle">哈尔滨剑桥学院 · 智能科学与工程学院</div>
+
+      <form class="login-form" onsubmit="event.preventDefault(); window.location.href='访客首页.html'">
+        <div class="form-group">
+          <label>用户名</label>
+          <input type="text" placeholder="请输入用户名" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label>密码</label>
+          <input type="password" placeholder="请输入密码" autocomplete="current-password">
+        </div>
+        <button type="submit" class="login-btn">登 录</button>
+      </form>
+
+      <a href="注册.html" class="login-secondary">注册新账号</a>
+
+      <div class="login-footer">
+        <a href="管理员后台首页.html">管理员登录入口</a> ·
+        <a href="访客首页.html">游客直接访问</a>
+      </div>
+
+      <div class="login-tip">提示：未登录可浏览校园信息，预约/AI 咨询需登录</div>
+    </div>
+  </div>
+</body>
+
+</html>

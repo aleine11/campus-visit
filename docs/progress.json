@@ -1,12 +1,10 @@
 {
   "projectName": "基于 SpringBoot+RAG 的校园参观预约与智能咨询系统",
-  "student": "钟啸林",
   "school": "哈尔滨剑桥学院",
   "college": "智能科学与工程学院",
-  "advisor": "郭旭 副教授",
   "startTime": "2026-08-26T22:50:00",
-  "lastUpdate": "2026-08-26T22:50:00",
-  "currentStage": 0,
+  "lastUpdate": "2026-08-27T10:00:00",
+  "currentStage": "2-in-progress",
   "stages": {
     "stage1_pre": {
       "status": "completed",
@@ -14,38 +12,136 @@
       "summary": "需求梳理 + 技术选型确认（SpringBoot+Vue3+MySQL+Milvus+BGE-small-zh+阿里百炼，RAG 手写）"
     },
     "stage0": {
-      "status": "in_progress",
-      "completedAt": null,
-      "summary": "项目初始化：搭建后端 SpringBoot 骨架 + 前端 Vue3 骨架 + 配置文件 + 全局基础代码"
+      "status": "completed",
+      "completedAt": "2026-08-26T23:10:00",
+      "summary": "项目初始化：后端 SpringBoot 骨架（pom.xml + 配置文件 + Result/ResultCode/异常处理/跨域/MyBatis-Plus 配置） + 前端 Vue3 骨架（package.json + vite.config + main.js + App.vue + router + request.js + 4 个占位页面） + docs/ + .gitignore + README + 首次提交 21adebb"
     },
     "stage1_post": {
-      "status": "pending",
-      "docs": ["architecture.md", "database.md", "frontend-prototype.md", "产品原型/"],
-      "summary": "产出四份设计文档与产品原型"
+      "status": "completed",
+      "completedAt": "2026-08-26T23:45:00",
+      "docs": [
+        {
+          "name": "architecture.md",
+          "status": "completed",
+          "summary": "项目架构分层 + 49 个接口说明书（含统一返回/状态码/异常/JWT 拦截/CORS）"
+        },
+        {
+          "name": "database.md",
+          "status": "completed",
+          "summary": "8 张 MySQL 表 + 1 个 Milvus 集合（毕设答辩级，含建表 SQL/索引/状态字典/初始化数据/容量预估）"
+        },
+        {
+          "name": "frontend-prototype.md",
+          "status": "completed",
+          "summary": "22 页面清单 + 跳转/权限/样式规范"
+        },
+        {
+          "name": "产品原型/",
+          "status": "completed",
+          "summary": "26 个 HTML 中保真原型（登录/首页/AI咨询/RAG库/场次/预约/审核/管理后台全套）"
+        }
+      ],
+      "summary": "四份设计文档与产品原型全部产出，等待用户确认进入 Stage2 代码开发"
     },
     "stage2": {
-      "status": "pending",
+      "status": "in-progress",
       "modules": [
-        { "id": 1, "name": "用户认证模块（访客注册登录、JWT、管理员登录）", "status": "pending" },
-        { "id": 2, "name": "校园公告模块", "status": "pending" },
-        { "id": 3, "name": "参观场次模块", "status": "pending" },
-        { "id": 4, "name": "访客预约模块（提交、查询、取消）", "status": "pending" },
-        { "id": 5, "name": "预约订单审核模块", "status": "pending" },
-        { "id": 6, "name": "访客用户管理模块（冻结/解冻）", "status": "pending" },
-        { "id": 7, "name": "管理员账号管理模块", "status": "pending" },
-        { "id": 8, "name": "RAG 知识库文档管理（上传、解析、分块、向量化、删除同步）", "status": "pending" },
-        { "id": 9, "name": "AI 智能咨询问答模块（检索、提示词、大模型调用、记录）", "status": "pending" },
-        { "id": 10, "name": "问答日志统计模块", "status": "pending" },
-        { "id": 11, "name": "前端访客前台页面", "status": "pending" },
-        { "id": 12, "name": "前端管理员后台页面", "status": "pending" }
+        {
+          "id": 0,
+          "name": "后端基础组件（建表SQL/种子数据/8 Entity/8 Mapper/MP分页乐观锁自动填充插件/JWT工具链/@RequiresLogin @RequiresRole注解/JwtAuthInterceptor拦截器）",
+          "status": "completed",
+          "completedAt": "2026-08-27"
+        },
+        {
+          "id": 1,
+          "name": "用户认证模块（访客注册登录、JWT、管理员登录）",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "name": "校园公告模块",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "name": "参观场次模块",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "name": "访客预约模块（提交、查询、取消）",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "name": "预约订单审核模块",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "name": "访客用户管理模块（冻结/解冻）",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "name": "管理员账号管理模块",
+          "status": "pending"
+        },
+        {
+          "id": 8,
+          "name": "RAG 知识库文档管理（上传、解析、分块、向量化、删除同步）",
+          "status": "pending"
+        },
+        {
+          "id": 9,
+          "name": "AI 智能咨询问答模块（检索、提示词、大模型调用、记录）",
+          "status": "pending"
+        },
+        {
+          "id": 10,
+          "name": "问答日志统计模块",
+          "status": "pending"
+        },
+        {
+          "id": 11,
+          "name": "前端访客前台页面",
+          "status": "pending"
+        },
+        {
+          "id": 12,
+          "name": "前端管理员后台页面",
+          "status": "pending"
+        }
       ]
     },
-    "stage3": { "status": "pending" },
-    "stage4": { "status": "pending" }
+    "stage3": {
+      "status": "pending"
+    },
+    "stage4": {
+      "status": "pending"
+    }
   },
   "techStack": {
-    "backend": ["SpringBoot 3.2", "MyBatis-Plus 3.5", "JWT", "Hutool", "PDFBox", "POI", "Milvus SDK", "DashScope SDK", "DJL"],
-    "frontend": ["Vue 3.4", "Vue Router 4", "Pinia", "Element-Plus 2.7", "Axios", "Vite 5", "ECharts"],
+    "backend": [
+      "SpringBoot 3.2",
+      "MyBatis-Plus 3.5",
+      "JWT",
+      "Hutool",
+      "PDFBox",
+      "POI",
+      "Milvus SDK",
+      "DashScope SDK",
+      "DJL"
+    ],
+    "frontend": [
+      "Vue 3.4",
+      "Vue Router 4",
+      "Pinia",
+      "Element-Plus 2.7",
+      "Axios",
+      "Vite 5",
+      "ECharts"
+    ],
     "database": "MySQL 8.0",
     "vectorDB": "Milvus (Docker, 768 dim, collection=campus_knowledge)",
     "embedding": "BGE-small-zh (local)",
@@ -53,11 +149,40 @@
     "rag": "手写实现"
   },
   "milestones": [
-    { "name": "Stage1 前半段完成（需求+技术选型）", "date": "2026-08-26", "status": "completed" },
-    { "name": "Stage0 项目初始化完成", "date": null, "status": "in_progress" },
-    { "name": "Stage1 后半段完成（四份设计文档）", "date": null, "status": "pending" },
-    { "name": "Stage2 全部模块开发完成", "date": null, "status": "pending" },
-    { "name": "Stage3 全部模块测试通过", "date": null, "status": "pending" },
-    { "name": "Stage4 部署上线完成", "date": null, "status": "pending" }
+    {
+      "name": "Stage1 前半段完成（需求+技术选型）",
+      "date": "2026-08-26",
+      "status": "completed"
+    },
+    {
+      "name": "Stage0 项目初始化完成",
+      "date": "2026-08-26",
+      "status": "completed"
+    },
+    {
+      "name": "Stage1 后半段完成（四份设计文档）",
+      "date": "2026-08-26",
+      "status": "completed"
+    },
+    {
+      "name": "Stage2 模块0（后端基础组件）完成，产出 docs/知识点.md",
+      "date": "2026-08-27",
+      "status": "completed"
+    },
+    {
+      "name": "Stage2 全部模块开发完成",
+      "date": null,
+      "status": "pending"
+    },
+    {
+      "name": "Stage3 全部模块测试通过",
+      "date": null,
+      "status": "pending"
+    },
+    {
+      "name": "Stage4 部署上线完成",
+      "date": null,
+      "status": "pending"
+    }
   ]
 }

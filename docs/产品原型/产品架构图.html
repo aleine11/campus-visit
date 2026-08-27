@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>产品架构图 - 校园参观预约与智能咨询系统</title>
+  <link rel="stylesheet" href="css/common.css">
+</head>
+<body>
+  <div class="page-wrapper">
+  <div class="visitor-header">
+    <div class="logo">哈尔滨剑桥学院 · 校园参观预约系统</div>
+    <nav class="nav"><a href="项目说明.html">返回首页</a></nav>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-title">系统总体架构（四层架构）</div>
+      <div style="padding:16px 0;text-align:center">
+        <div style="background:#ecf5ff;border:2px solid #409EFF;border-radius:4px;padding:16px;margin-bottom:8px;color:#337ECC;font-weight:600">前端展示层（Vue3 + Element-Plus + Axios）</div>
+        <div style="color:#909399">↓</div>
+        <div style="background:#f0f9eb;border:2px solid #67C23A;border-radius:4px;padding:16px;margin-bottom:8px;color:#529b2e;font-weight:600">后端业务服务层（SpringBoot + JWT + 模块化 Service）</div>
+        <div style="color:#909399">↓</div>
+        <div style="background:#fdf6ec;border:2px solid #E6A23C;border-radius:4px;padding:16px;margin-bottom:8px;color:#b88230;font-weight:600">数据访问层（MyBatis-Plus + Milvus Java SDK）</div>
+        <div style="color:#909399">↓</div>
+        <div style="background:#fef0f0;border:2px solid #F56C6C;border-radius:4px;padding:16px;margin-bottom:8px;color:#c45656;font-weight:600">存储层（MySQL 业务数据 + Milvus 向量数据）</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">功能模块拆解</div>
+      <div class="grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <h3 style="margin-bottom:12px;color:#409EFF">访客前台模块</h3>
+          <div class="card" style="padding:8px;margin-bottom:8px">校园信息展示：首页简介、环境图、最新公告</div>
+          <div class="card" style="padding:8px;margin-bottom:8px">参观预约：场次列表、预约提交、我的订单、取消</div>
+          <div class="card" style="padding:8px;margin-bottom:8px">AI 智能咨询：悬浮聊天窗、历史会话、清空</div>
+          <div class="card" style="padding:8px;margin-bottom:8px">个人中心：信息修改、密码修改</div>
+        </div>
+        <div>
+          <h3 style="margin-bottom:12px;color:#67C23A">管理员后台模块</h3>
+          <div class="card" style="padding:8px;margin-bottom:8px">参观场次管理：增/改/上下架/删</div>
+          <div class="card" style="padding:8px;margin-bottom:8px">预约订单审核：分页查询、通过/驳回</div>
+          <div class="card" style="padding:8px;margin-bottom:8px">访客用户管理：列表、冻结/解冻</div>
+          <div class="card" style="padding:8px;margin-bottom:8px">校园公告管理：增/改/发布/下架/删</div>
+          <div class="card" style="padding:8px;margin-bottom:8px;color:#F56C6C;font-weight:600">★ RAG 知识库管理：上传/解析/向量化/删除同步</div>
+          <div class="card" style="padding:8px;margin-bottom:8px">问答日志统计：记录查询、高频词云</div>
+          <div class="card" style="padding:8px;margin-bottom:8px">管理员账号管理：新增、密码重置</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">RAG 核心工作链路（毕设亮点）</div>
+      <div style="padding:16px 0">
+        <div style="background:#fef0f0;border:1px dashed #F56C6C;padding:12px;margin-bottom:4px;border-radius:4px">① 管理员上传 PDF/Word/TXT 文档</div>
+        <div style="color:#909399;text-align:center">↓</div>
+        <div style="background:#fef0f0;border:1px dashed #F56C6C;padding:12px;margin-bottom:4px;border-radius:4px">② 后端 PDFBox/POI 解析文本 → 按 500 字 + 100 字重叠分块</div>
+        <div style="color:#909399;text-align:center">↓</div>
+        <div style="background:#fef0f0;border:1px dashed #F56C6C;padding:12px;margin-bottom:4px;border-radius:4px">③ BGE-small-zh 生成 768 维向量 → 写入 Milvus 集合 campus_knowledge</div>
+        <div style="color:#909399;text-align:center">↓</div>
+        <div style="background:#fef0f0;border:1px dashed #F56C6C;padding:12px;margin-bottom:4px;border-radius:4px">④ 访客提问 → 问题向量 → Milvus 相似度检索 top-3 文档片段</div>
+        <div style="color:#909399;text-align:center">↓</div>
+        <div style="background:#fef0f0;border:1px dashed #F56C6C;padding:12px;margin-bottom:4px;border-radius:4px">⑤ 拼提示词（强约束：无内容回固定话术，禁止编造）→ 调阿里百炼 qwen-plus</div>
+        <div style="color:#909399;text-align:center">↓</div>
+        <div style="background:#fef0f0;border:1px dashed #F56C6C;padding:12px;border-radius:4px">⑥ 返回答案 → 问答记录存 MySQL ai_chat_record → 前端展示</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">数据存储分离</div>
+      <div class="grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card" style="padding:16px">
+          <h4 style="margin-bottom:8px;color:#337ECC">MySQL（结构化业务数据）</h4>
+          <ol style="padding-left:24px;line-height:1.8">
+            <li>visitor_user 访客用户</li>
+            <li>visit_session 参观场次</li>
+            <li>visit_reservation 预约订单</li>
+            <li>campus_notice 校园公告</li>
+            <li>knowledge_doc 文档元数据</li>
+            <li>ai_chat_record 聊天记录</li>
+            <li>sys_admin 管理员账号</li>
+          </ol>
+        </div>
+        <div class="card" style="padding:16px">
+          <h4 style="margin-bottom:8px;color:#c45656">Milvus（向量数据库）</h4>
+          <p style="margin-bottom:8px">集合：campus_knowledge</p>
+          <ul style="line-height:1.8">
+            <li>vector：768 维 FLOAT_VECTOR</li>
+            <li>doc_id：关联 knowledge_doc 主键</li>
+            <li>chunk_text：原始文本块</li>
+          </ul>
+          <p style="margin-top:12px;color:#909399">检索策略：相似度 top-3 检索，按 doc_id 删除保证一致性</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">© 2026 哈尔滨剑桥学院 智能科学与工程学院 · 毕业设计</div>
+</body>
+</html>

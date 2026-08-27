@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>预约提交 - 校园参观预约与智能咨询系统</title>
+  <link rel="stylesheet" href="css/common.css">
+  <style>
+    .reservation-card { max-width: 720px; margin: 0 auto; }
+    .session-info { background: #f0f9eb; border: 1px solid #c2e7b0; padding: 16px; border-radius: 4px; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+  <div class="visitor-header">
+    <div class="logo">哈尔滨剑桥学院 · 校园参观预约系统</div>
+    <nav class="nav">
+      <a href="访客首页.html">首页</a>
+      <a href="公告列表.html">公告</a>
+      <a href="场次列表.html" class="active">预约参观</a>
+      <a href="我的预约.html">个人中心</a>
+      <a href="登录.html">登录</a>
+    </nav>
+  </div>
+
+  <div class="container">
+    <div class="card reservation-card">
+      <div class="card-title">提交参观预约</div>
+
+      <div class="session-info">
+        <div class="flex-between">
+          <div>
+            <p class="text-muted">参观场次</p>
+            <p style="font-size:18px;font-weight:600">2026-04-12 周六</p>
+            <p>时段：09:00 - 11:00</p>
+          </div>
+          <div class="text-center">
+            <p class="text-muted">剩余名额</p>
+            <p style="font-size:24px;color:#67C23A;font-weight:600">38</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-item">
+        <label>真实姓名</label>
+        <input type="text" placeholder="请输入真实姓名（2-10 字）" value="钟啸林">
+      </div>
+      <div class="form-item">
+        <label>联系手机号</label>
+        <input type="text" placeholder="11 位手机号" value="13800138000">
+      </div>
+      <div class="form-item">
+        <label>参观人数</label>
+        <input type="number" min="1" max="38" value="2">
+        <span class="text-muted" style="margin-left:8px">最大 38 人</span>
+      </div>
+      <div class="form-item">
+        <label>参观事由</label>
+        <textarea placeholder="请填写参观事由（5-200 字）" style="width:480px;height:100px">考生家长，希望了解学院专业设置和教学环境，为高考志愿填报做准备</textarea>
+      </div>
+
+      <div class="form-item">
+        <label></label>
+        <button class="btn btn-primary" onclick="alert('提交成功，跳转到我的预约页')">提交预约</button>
+        <a href="场次列表.html" class="btn">返回场次列表</a>
+      </div>
+
+      <div class="card" style="padding:12px;background:#fdf6ec;border:1px solid #f5dab1;margin-top:16px">
+        <strong style="color:#b88230">业务校验规则</strong>
+        <ul style="margin:8px 0 0 24px;line-height:1.8;color:#606266">
+          <li>同一访客不可重复预约同一场次（重复提交拦截）</li>
+          <li>参观人数不得超过剩余名额</li>
+          <li>场次过期/下架时无法提交</li>
+          <li>提交后状态为"待审核"，等待管理员审核</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <a href="AI咨询悬浮.html" class="ai-float-btn">AI 咨询</a>
+
+  <div class="footer">© 2026 哈尔滨剑桥学院 智能科学与工程学院 · 毕业设计</div>
+</body>
+</html>

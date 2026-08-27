@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>我的预约 - 校园参观预约与智能咨询系统</title>
+  <link rel="stylesheet" href="css/common.css">
+  <style>
+    .tabs { display: flex; border-bottom: 1px solid #DCDFE6; margin-bottom: 16px; }
+    .tabs div { padding: 8px 16px; cursor: pointer; border-bottom: 2px solid transparent; }
+    .tabs div.active { color: #409EFF; border-bottom-color: #409EFF; }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+  <div class="visitor-header">
+    <div class="logo">哈尔滨剑桥学院 · 校园参观预约系统</div>
+    <nav class="nav">
+      <a href="访客首页.html">首页</a>
+      <a href="公告列表.html">公告</a>
+      <a href="场次列表.html">预约参观</a>
+      <a href="我的预约.html" class="active">个人中心</a>
+      <a href="登录.html">登录</a>
+    </nav>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-title">我的预约订单</div>
+
+      <div class="tabs">
+        <div class="active">全部 (4)</div>
+        <div>待审核 (2)</div>
+        <div>通过 (1)</div>
+        <div>驳回 (0)</div>
+        <div>已取消 (1)</div>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>订单ID</th>
+            <th>参观日期/时段</th>
+            <th>参观人数</th>
+            <th>提交时间</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>10234</td>
+            <td>2026-04-12 09:00-11:00</td>
+            <td>2 人</td>
+            <td>2026-03-20 10:15:32</td>
+            <td><span class="tag tag-warning">待审核</span></td>
+            <td>
+              <a href="#" class="btn btn-sm">详情</a>
+              <button class="btn btn-sm btn-danger" onclick="if(confirm('确认取消该预约？取消后释放名额'))alert('已取消')">取消</button>
+            </td>
+          </tr>
+          <tr>
+            <td>10230</td>
+            <td>2026-04-12 14:00-16:00</td>
+            <td>3 人</td>
+            <td>2026-03-18 14:22:10</td>
+            <td><span class="tag tag-warning">待审核</span></td>
+            <td>
+              <a href="#" class="btn btn-sm">详情</a>
+              <button class="btn btn-sm btn-danger" onclick="if(confirm('确认取消？'))alert('已取消')">取消</button>
+            </td>
+          </tr>
+          <tr>
+            <td>10198</td>
+            <td>2026-03-25 09:00-11:00</td>
+            <td>1 人</td>
+            <td>2026-03-10 09:30:00</td>
+            <td><span class="tag tag-success">通过</span></td>
+            <td><a href="#" class="btn btn-sm">详情</a></td>
+          </tr>
+          <tr>
+            <td>10185</td>
+            <td>2026-03-22 09:00-11:00</td>
+            <td>2 人</td>
+            <td>2026-03-08 16:45:00</td>
+            <td><span class="tag tag-info">已取消</span></td>
+            <td><a href="#" class="btn btn-sm">详情</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="card" style="padding:12px;background:#fdf6ec;border:1px solid #f5dab1;margin-top:16px">
+        <strong style="color:#b88230">业务规则</strong>
+        <ul style="margin:8px 0 0 24px;line-height:1.8;color:#606266">
+          <li>仅"待审核"订单可访客自主取消，取消后场次名额自动释放</li>
+          <li>"通过/驳回"订单不可访客取消，需联系管理员</li>
+          <li>驳回订单可查看驳回原因</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <a href="AI咨询悬浮.html" class="ai-float-btn">AI 咨询</a>
+
+  <div class="footer">© 2026 哈尔滨剑桥学院 智能科学与工程学院 · 毕业设计</div>
+</body>
+</html>

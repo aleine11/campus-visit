@@ -1,0 +1,514 @@
+/* ================================================
+   校园参观预约与智能咨询系统 - 产品原型公共样式
+   中保真原型标准：布局清晰 + 灰度主色调 + 真实业务文字
+   ================================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 14px;
+  color: #303133;
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* ============= 主题色变量 ============= */
+:root {
+  --primary: #409EFF;
+  --primary-dark: #337ECC;
+  --success: #67C23A;
+  --warning: #E6A23C;
+  --danger: #F56C6C;
+  --info: #909399;
+  --text-primary: #303133;
+  --text-regular: #606266;
+  --text-secondary: #909399;
+  --border: #DCDFE6;
+  --bg: #F5F7FA;
+  --bg-light: #ECF0F5;
+}
+
+/* ============= 通用容器 ============= */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* ============= 全局页面背景（替代各页面自行写的 <style> 背景） =============
+   使用纯 CSS 渐变 + SVG data URI，零网络请求、GPU 友好、无 backdrop-filter */
+.page-wrapper {
+  min-height: 100vh;
+  /* 轻量渐变 + SVG 抽象科技纹理，不依赖远程图片 */
+  background:
+    linear-gradient(135deg, #e8f4ff 0%, #f0f5ff 40%, #f7f9ff 100%);
+  position: relative;
+}
+
+/* 通用"有校园氛围"的装饰性 SVG 背景（内嵌 data URI，无网络请求） */
+.page-wrapper::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%23409EFF' stop-opacity='0.06'/><stop offset='100%' stop-color='%23667eea' stop-opacity='0.02'/></linearGradient></defs><circle cx='80' cy='80' r='160' fill='url(%23g)'/><circle cx='320' cy='320' r='180' fill='url(%23g)'/><circle cx='200' cy='200' r='60' fill='%23409EFF' fill-opacity='0.04'/></svg>");
+  background-size: 400px 400px;
+}
+
+/* 内容层级：让内容浮在背景之上 */
+.page-wrapper>* {
+  position: relative;
+  z-index: 1;
+}
+
+/* 纯渐变背景（用于登录/注册等全屏卡片页，更干净） */
+.page-wrapper--gradient {
+  background: linear-gradient(135deg, #2b5876 0%, #4e4376 50%, #667eea 100%);
+}
+
+.page-wrapper--gradient::before {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'><defs><radialGradient id='r' cx='50%25' cy='50%25'><stop offset='0%25' stop-color='white' stop-opacity='0.15'/><stop offset='100%25' stop-color='white' stop-opacity='0'/></radialGradient></defs><rect width='600' height='600' fill='url(%23r)'/><circle cx='150' cy='100' r='200' fill='%23409EFF' fill-opacity='0.3'/><circle cx='500' cy='500' r='250' fill='%23667eea' fill-opacity='0.25'/></svg>");
+  background-size: 600px 600px;
+}
+
+/* 浅色干净背景（简单后台页、列表页） */
+.page-wrapper--light {
+  background: #f5f7fa;
+}
+
+.page-wrapper--light::before {
+  display: none;
+}
+
+/* 清理 body 默认背景色（统一由 page-wrapper 负责） */
+body {
+  background: #f5f7fa;
+}
+
+/* ============= 访客前台顶部导航（统一外观 + 背景） ============= */
+.visitor-header {
+  background: linear-gradient(135deg, rgba(64, 158, 255, 0.95) 0%, rgba(102, 126, 234, 0.95) 100%);
+  color: #fff;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  box-shadow: 0 2px 12px rgba(64, 158, 255, 0.15);
+  position: relative;
+  z-index: 10;
+}
+
+.visitor-header .logo {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.visitor-header .nav a {
+  margin-left: 24px;
+  font-size: 14px;
+  color: #fff;
+  padding-bottom: 4px;
+  transition: opacity .2s;
+}
+
+.visitor-header .nav a:hover {
+  opacity: 0.85;
+}
+
+.visitor-header .nav a.active {
+  border-bottom: 2px solid #fff;
+  opacity: 1;
+}
+
+/* ============= 管理员后台布局 ============= */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.admin-sidebar {
+  width: 220px;
+  background: #304156;
+  color: #bfcbd9;
+}
+
+.admin-sidebar .sidebar-logo {
+  padding: 20px;
+  text-align: center;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  background: #2b2f3a;
+}
+
+.admin-sidebar ul li {
+  padding: 14px 20px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+}
+
+.admin-sidebar ul li:hover {
+  background: #2b3a4d;
+}
+
+.admin-sidebar ul li.active {
+  background: #409EFF;
+  color: #fff;
+  border-left-color: #fff;
+}
+
+.admin-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-topbar {
+  height: 60px;
+  background: #fff;
+  border-bottom: 1px solid #e6e6e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.admin-content {
+  padding: 24px;
+  flex: 1;
+}
+
+/* ============= 卡片 ============= */
+.card {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+/* ============= 按钮 ============= */
+.btn {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-regular);
+  transition: all .2s;
+}
+
+.btn:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: #fff;
+}
+
+.btn-success {
+  background: var(--success);
+  color: #fff;
+  border-color: var(--success);
+}
+
+.btn-warning {
+  background: var(--warning);
+  color: #fff;
+  border-color: var(--warning);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+  border-color: var(--danger);
+}
+
+.btn-sm {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.btn:disabled {
+  background: #f5f7fa;
+  color: #c0c4cc;
+  cursor: not-allowed;
+  border-color: #e4e7ed;
+}
+
+/* ============= 表单 ============= */
+.form-item {
+  margin-bottom: 16px;
+}
+
+.form-item label {
+  display: inline-block;
+  width: 100px;
+  text-align: right;
+  padding-right: 12px;
+  color: var(--text-regular);
+  font-size: 14px;
+}
+
+.form-item input,
+.form-item textarea,
+.form-item select {
+  width: 280px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color .2s;
+}
+
+.form-item input:focus,
+.form-item textarea:focus {
+  border-color: var(--primary);
+}
+
+.form-item textarea {
+  height: 80px;
+  resize: vertical;
+}
+
+/* ============= 表格 ============= */
+.table {
+  width: 100%;
+  background: #fff;
+  border-collapse: collapse;
+}
+
+.table th {
+  background: #f5f7fa;
+  color: var(--text-regular);
+  font-weight: 600;
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid #ebeef5;
+  color: var(--text-regular);
+}
+
+.table tr:hover td {
+  background: #f5f7fa;
+}
+
+/* ============= 标签 ============= */
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.tag-primary {
+  background: #ecf5ff;
+  color: var(--primary);
+  border: 1px solid #b3d8ff;
+}
+
+.tag-success {
+  background: #f0f9eb;
+  color: var(--success);
+  border: 1px solid #c2e7b0;
+}
+
+.tag-warning {
+  background: #fdf6ec;
+  color: var(--warning);
+  border: 1px solid #f5dab1;
+}
+
+.tag-danger {
+  background: #fef0f0;
+  color: var(--danger);
+  border: 1px solid #fbc4c4;
+}
+
+.tag-info {
+  background: #f4f4f5;
+  color: var(--info);
+  border: 1px solid #d3d4d6;
+}
+
+/* ============= 分页 ============= */
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  gap: 4px;
+}
+
+.pagination button {
+  min-width: 32px;
+  padding: 6px 10px;
+}
+
+/* ============= AI 悬浮窗 ============= */
+.ai-float-btn {
+  position: fixed;
+  right: 32px;
+  bottom: 80px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--success);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  font-size: 13px;
+  z-index: 100;
+}
+
+/* ============= 页脚 ============= */
+.footer {
+  text-align: center;
+  padding: 16px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  background: #fff;
+}
+
+/* ============= 工具类 ============= */
+.flex {
+  display: flex;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+.mb-8 {
+  margin-bottom: 8px;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+.mt-24 {
+  margin-top: 24px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: var(--text-secondary);
+}
+
+.gap-8 {
+  gap: 8px;
+}
+
+.gap-16 {
+  gap: 16px;
+}
+
+/* ============= Hero 区块 ============= */
+.hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 60px 32px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.hero p {
+  font-size: 16px;
+  opacity: .9;
+}
+
+/* ============= 卡片网格 ============= */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* ============= 统计卡片 ============= */
+.stat-card {
+  background: #fff;
+  border-radius: 4px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
+}
+
+.stat-card .label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.stat-card .value {
+  font-size: 32px;
+  color: var(--primary);
+  font-weight: 600;
+  margin-top: 8px;
+}

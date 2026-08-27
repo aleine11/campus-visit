@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>加载中 - 校园参观预约与智能咨询系统</title>
+  <link rel="stylesheet" href="css/common.css">
+  <style>
+    .state-container { min-height: 100vh; display: flex; justify-content: center; align-items: center; background: #f5f7fa; }
+    .state-content { text-align: center; }
+    .skeleton { background: linear-gradient(90deg, #f0f2f5 25%, #e6e8eb 37%, #f0f2f5 63%); background-size: 400% 100%; animation: skeleton-loading 1.4s ease infinite; border-radius: 4px; }
+    @keyframes skeleton-loading { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+    .spinner { display: inline-block; width: 40px; height: 40px; border: 4px solid #f0f2f5; border-top: 4px solid #409EFF; border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="state-container">
+    <div class="state-content" style="max-width:800px;width:100%">
+      <div class="spinner"></div>
+      <p style="margin-top:16px;color:#909399">数据加载中...</p>
+
+      <div class="card mt-24" style="padding:16px;text-align:left">
+        <p class="text-muted mb-16">骨架屏示例（用于表格加载）</p>
+        <div class="skeleton" style="height:32px;margin-bottom:12px"></div>
+        <div class="skeleton" style="height:32px;margin-bottom:12px;width:90%"></div>
+        <div class="skeleton" style="height:32px;margin-bottom:12px;width:80%"></div>
+        <div class="skeleton" style="height:32px;width:60%"></div>
+      </div>
+
+      <div class="card mt-24" style="padding:16px;text-align:left">
+        <p class="text-muted mb-16">AI 思考中动画示例</p>
+        <div style="padding:16px;background:#f5f7fa;border-radius:4px;text-align:center">
+          <span style="display:inline-block;width:8px;height:8px;background:#409EFF;border-radius:50%;margin:0 2px;animation:bounce 1s infinite"></span>
+          <span style="display:inline-block;width:8px;height:8px;background:#409EFF;border-radius:50%;margin:0 2px;animation:bounce 1s infinite .2s"></span>
+          <span style="display:inline-block;width:8px;height:8px;background:#409EFF;border-radius:50%;margin:0 2px;animation:bounce 1s infinite .4s"></span>
+          <span style="margin-left:8px;color:#909399">AI 思考中...</span>
+        </div>
+      </div>
+
+      <p class="mt-24">
+        <a href="项目说明.html" class="btn btn-primary">返回项目说明</a>
+      </p>
+    </div>
+  </div>
+  <style>@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }</style>
+</body>
+</html>

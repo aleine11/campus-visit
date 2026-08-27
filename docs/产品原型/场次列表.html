@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>可预约场次 - 校园参观预约与智能咨询系统</title>
+  <link rel="stylesheet" href="css/common.css">
+</head>
+<body>
+  <div class="page-wrapper">
+  <div class="visitor-header">
+    <div class="logo">哈尔滨剑桥学院 · 校园参观预约系统</div>
+    <nav class="nav">
+      <a href="访客首页.html">首页</a>
+      <a href="公告列表.html">公告</a>
+      <a href="场次列表.html" class="active">预约参观</a>
+      <a href="我的预约.html">个人中心</a>
+      <a href="登录.html">登录</a>
+    </nav>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-title">场次筛选</div>
+      <div class="flex gap-16">
+        <div class="form-item" style="margin:0">
+          <label>参观日期</label>
+          <input type="date" value="2026-04-12">
+        </div>
+        <div class="form-item" style="margin:0">
+          <label>时段</label>
+          <select style="width:200px">
+            <option>全部</option>
+            <option>上午 09:00-11:00</option>
+            <option>下午 14:00-16:00</option>
+          </select>
+        </div>
+        <button class="btn btn-primary">查询</button>
+        <button class="btn">重置</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">可预约场次列表（自动过滤过期、下架、名额满）</div>
+      <div class="grid-3">
+        <div class="card" style="padding:16px">
+          <p class="text-muted">参观日期</p>
+          <p style="font-size:18px;font-weight:600">2026-04-12 周六</p>
+          <p class="text-muted mt-8">时段</p>
+          <p>09:00 - 11:00</p>
+          <p class="text-muted mt-8">剩余名额</p>
+          <p style="color:#67C23A;font-weight:600">38 / 50</p>
+          <a href="预约提交.html" class="btn btn-primary btn-sm" style="width:100%;text-align:center;margin-top:12px">立即预约</a>
+        </div>
+        <div class="card" style="padding:16px">
+          <p class="text-muted">参观日期</p>
+          <p style="font-size:18px;font-weight:600">2026-04-12 周六</p>
+          <p class="text-muted mt-8">时段</p>
+          <p>14:00 - 16:00</p>
+          <p class="text-muted mt-8">剩余名额</p>
+          <p style="color:#67C23A;font-weight:600">22 / 50</p>
+          <a href="预约提交.html" class="btn btn-primary btn-sm" style="width:100%;text-align:center;margin-top:12px">立即预约</a>
+        </div>
+        <div class="card" style="padding:16px">
+          <p class="text-muted">参观日期</p>
+          <p style="font-size:18px;font-weight:600">2026-04-13 周日</p>
+          <p class="text-muted mt-8">时段</p>
+          <p>09:00 - 11:00</p>
+          <p class="text-muted mt-8">剩余名额</p>
+          <p style="color:#67C23A;font-weight:600">45 / 50</p>
+          <a href="预约提交.html" class="btn btn-primary btn-sm" style="width:100%;text-align:center;margin-top:12px">立即预约</a>
+        </div>
+        <div class="card" style="padding:16px;background:#f5f7fa;opacity:.6">
+          <p class="text-muted">参观日期</p>
+          <p style="font-size:18px;font-weight:600">2026-04-13 周日</p>
+          <p class="text-muted mt-8">时段</p>
+          <p>14:00 - 16:00</p>
+          <p class="text-muted mt-8">剩余名额</p>
+          <p style="color:#F56C6C;font-weight:600">0 / 50</p>
+          <button class="btn btn-sm" style="width:100%;margin-top:12px" disabled>名额已满</button>
+        </div>
+        <div class="card" style="padding:16px;background:#f5f7fa;opacity:.6">
+          <p class="text-muted">参观日期</p>
+          <p style="font-size:18px;font-weight:600">2026-04-14 周一</p>
+          <p class="text-muted mt-8">时段</p>
+          <p>09:00 - 11:00</p>
+          <p class="text-muted mt-8">剩余名额</p>
+          <p style="color:#909399;font-weight:600">场次已下架</p>
+          <button class="btn btn-sm" style="width:100%;margin-top:12px" disabled>暂不开放</button>
+        </div>
+      </div>
+
+      <div class="pagination">
+        <button class="btn btn-sm">上一页</button>
+        <button class="btn btn-sm btn-primary">1</button>
+        <button class="btn btn-sm">2</button>
+        <button class="btn btn-sm">下一页</button>
+        <span class="text-muted" style="line-height:32px;margin-left:8px">共 2 页 5 条</span>
+      </div>
+    </div>
+  </div>
+
+  <a href="AI咨询悬浮.html" class="ai-float-btn">AI 咨询</a>
+
+  <div class="footer">© 2026 哈尔滨剑桥学院 智能科学与工程学院 · 毕业设计</div>
+</body>
+</html>

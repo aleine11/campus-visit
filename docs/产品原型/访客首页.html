@@ -1,0 +1,977 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <title>访客首页 - 校园参观预约与智能咨询系统</title>
+  <link rel="stylesheet" href="css/common.css">
+  <style>
+    /* ============= 顶部导航透明化（在 Hero 上） ============= */
+    .visitor-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: transparent;
+      color: #fff;
+      box-shadow: none;
+    }
+
+    .visitor-header .nav a {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .visitor-header .nav a:hover,
+    .visitor-header .nav a.active {
+      color: #fff;
+    }
+
+    /* ============= Hero 轮播 ============= */
+    .hero-carousel {
+      position: relative;
+      height: 600px;
+      overflow: hidden;
+    }
+
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      color: #fff;
+      opacity: 0;
+      transition: opacity 1s ease;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero-slide.active {
+      opacity: 1;
+    }
+
+    .hero-slide::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(64, 158, 255, 0.6) 0%, rgba(102, 126, 234, 0.6) 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      padding: 0 24px;
+    }
+
+    .hero-content h1 {
+      font-size: 44px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-content .subtitle {
+      font-size: 18px;
+      opacity: 0.95;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .hero-btn {
+      padding: 14px 32px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .hero-btn-primary {
+      background: #fff;
+      color: #409EFF;
+    }
+
+    .hero-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-btn-ghost {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border: 2px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .hero-btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* 轮播控制点 */
+    .carousel-dots {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .carousel-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .carousel-dots span.active {
+      background: #fff;
+      width: 30px;
+      border-radius: 5px;
+    }
+
+    /* ============= 内容区块通用 ============= */
+    .section {
+      padding: 80px 32px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-header .eyebrow {
+      color: #409EFF;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .section-header h2 {
+      font-size: 32px;
+      color: #303133;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .section-header .desc {
+      color: #909399;
+      font-size: 15px;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* ============= 校园简介区块 ============= */
+    .intro-section {
+      background: #fff;
+    }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: center;
+    }
+
+    .intro-image {
+      height: 360px;
+      border-radius: 12px;
+      background: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20chinese%20university%20campus%20aerial%20view%2C%20beautiful%20architecture%2C%20blue%20sky%2C%20academic%20atmosphere%2C%20professional%20photography&image_size=landscape_4_3') center/cover;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .intro-text h3 {
+      font-size: 24px;
+      color: #303133;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .intro-text p {
+      color: #606266;
+      line-height: 1.9;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+
+    .intro-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .intro-stat {
+      text-align: center;
+      padding: 16px;
+      background: #f5f7fa;
+      border-radius: 8px;
+    }
+
+    .intro-stat .num {
+      font-size: 28px;
+      color: #409EFF;
+      font-weight: 600;
+    }
+
+    .intro-stat .label {
+      font-size: 13px;
+      color: #909399;
+      margin-top: 4px;
+    }
+
+    /* ============= 校园风光图集 ============= */
+    .gallery-section {
+      background: #f5f7fa;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .gallery-item {
+      height: 200px;
+      border-radius: 12px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all .3s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .gallery-item .caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* ============= 学院专业卡片 ============= */
+    .major-section {
+      background: #fff;
+    }
+
+    .major-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .major-card {
+      padding: 32px 24px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid #ebeef5;
+      transition: all .3s;
+      cursor: pointer;
+    }
+
+    .major-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+      border-color: #409EFF;
+    }
+
+    .major-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #ecf5ff 0%, #f0f9eb 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .major-card h3 {
+      font-size: 18px;
+      color: #303133;
+      margin-bottom: 8px;
+    }
+
+    .major-card .major-tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      background: #ecf5ff;
+      color: #409EFF;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    .major-card p {
+      color: #606266;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    /* ============= 最新公告区 ============= */
+    .news-section {
+      background: #f5f7fa;
+    }
+
+    .news-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .news-main {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .news-featured {
+      padding-bottom: 16px;
+      border-bottom: 1px dashed #ebeef5;
+      margin-bottom: 16px;
+    }
+
+    .news-featured h3 {
+      font-size: 18px;
+      color: #303133;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .news-featured h3:hover {
+      color: #409EFF;
+    }
+
+    .news-featured .meta {
+      color: #909399;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .news-featured p {
+      color: #606266;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .news-list-item {
+      padding: 12px 0;
+      border-bottom: 1px solid #f5f7fa;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .news-list-item:hover .title {
+      color: #409EFF;
+    }
+
+    .news-list-item .title {
+      color: #303133;
+      font-size: 14px;
+      flex: 1;
+    }
+
+    .news-list-item .date {
+      color: #909399;
+      font-size: 12px;
+    }
+
+    .news-side {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .news-side-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .news-side-card h4 {
+      font-size: 15px;
+      color: #303133;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .news-side-card .quick-link {
+      display: block;
+      padding: 8px 0;
+      color: #606266;
+      font-size: 13px;
+    }
+
+    .news-side-card .quick-link:hover {
+      color: #409EFF;
+    }
+
+    .news-side-card .quick-link::before {
+      content: '›';
+      margin-right: 8px;
+      color: #c0c4cc;
+    }
+
+    /* ============= 可预约场次区 ============= */
+    .session-section {
+      background: linear-gradient(135deg, #ecf5ff 0%, #f0f9eb 100%);
+    }
+
+    .session-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .session-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      transition: all .3s;
+      border-top: 4px solid #409EFF;
+    }
+
+    .session-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(64, 158, 255, 0.15);
+    }
+
+    .session-card .date {
+      font-size: 14px;
+      color: #909399;
+    }
+
+    .session-card .day {
+      font-size: 28px;
+      color: #303133;
+      font-weight: 700;
+      margin: 4px 0 12px;
+    }
+
+    .session-card .time {
+      padding: 6px 12px;
+      background: #ecf5ff;
+      color: #409EFF;
+      border-radius: 6px;
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .session-card .capacity {
+      margin: 16px 0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #606266;
+    }
+
+    .session-card .progress-bar {
+      height: 6px;
+      background: #f0f2f5;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .session-card .progress-fill {
+      height: 100%;
+      background: #67C23A;
+      border-radius: 3px;
+    }
+
+    .session-card.full .progress-fill {
+      background: #F56C6C;
+    }
+
+    .session-card .book-btn {
+      width: 100%;
+      padding: 10px;
+      background: #409EFF;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      transition: all .2s;
+    }
+
+    .session-card .book-btn:hover {
+      background: #337ECC;
+    }
+
+    .session-card.full {
+      opacity: 0.7;
+      border-top-color: #F56C6C;
+    }
+
+    .session-card.full .book-btn {
+      background: #c0c4cc;
+      cursor: not-allowed;
+    }
+
+    /* ============= 数据统计 ============= */
+    .stats-section {
+      padding: 60px 32px;
+      background: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20chinese%20university%20campus%20aerial%20view%2C%20beautiful%20architecture%2C%20blue%20sky%2C%20academic%20atmosphere%2C%20professional%20photography&image_size=landscape_16_9') center/cover fixed;
+      position: relative;
+    }
+
+    .stats-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(64, 158, 255, 0.85) 0%, rgba(102, 126, 234, 0.85) 100%);
+    }
+
+    .stats-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+      color: #fff;
+    }
+
+    .stats-grid .num {
+      font-size: 40px;
+      font-weight: 700;
+    }
+
+    .stats-grid .label {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+
+    /* ============= AI 入口 banner ============= */
+    .ai-banner {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 48px 32px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .ai-banner h2 {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    .ai-banner p {
+      font-size: 15px;
+      opacity: 0.95;
+      margin-bottom: 24px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .ai-banner .ai-btn {
+      padding: 12px 32px;
+      background: #fff;
+      color: #667eea;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .ai-banner .ai-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrapper">
+  <!-- 顶部导航 -->
+  <div class="visitor-header">
+    <div class="logo">哈尔滨剑桥学院 · 校园参观预约系统</div>
+    <nav class="nav">
+      <a href="访客首页.html" class="active">首页</a>
+      <a href="公告列表.html">公告</a>
+      <a href="场次列表.html">预约参观</a>
+      <a href="我的预约.html">个人中心</a>
+      <a href="登录.html">登录</a>
+    </nav>
+  </div>
+
+  <!-- Hero 轮播 -->
+  <div class="hero-carousel" id="carousel">
+    <div class="hero-slide active"
+      style="background-image: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20chinese%20university%20campus%20aerial%20view%2C%20beautiful%20architecture%2C%20blue%20sky%2C%20academic%20atmosphere%2C%20professional%20photography&image_size=landscape_16_9')">
+      <div class="hero-content">
+        <h1>欢迎访问哈尔滨剑桥学院</h1>
+        <p class="subtitle">智能科学与工程学院 · 校园参观预约与智能咨询<br>科技赋能校园开放 · 智慧服务每位访客</p>
+        <div class="hero-btns">
+          <a href="场次列表.html" class="hero-btn hero-btn-primary">立即预约参观</a>
+          <a href="AI咨询悬浮.html" class="hero-btn hero-btn-ghost">AI 智能咨询</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-slide"
+      style="background-image: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20university%20teaching%20building%20exterior%2C%20glass%20facade%2C%20sunlight%2C%20students%20walking%2C%20chinese%20campus&image_size=landscape_16_9')">
+      <div class="hero-content">
+        <h1>现代化教学环境</h1>
+        <p class="subtitle">现代化教学楼 · 智能化实验室 · 图书馆 · 体育馆<br>让每一位访客感受科技与学术的魅力</p>
+        <div class="hero-btns">
+          <a href="#gallery" class="hero-btn hero-btn-primary">浏览校园风光</a>
+          <a href="#majors" class="hero-btn hero-btn-ghost">了解学院专业</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-slide"
+      style="background-image: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=university%20library%20interior%2C%20bookshelves%2C%20reading%20area%2C%20warm%20lighting%2C%20students%20studying%2C%20modern%20architecture&image_size=landscape_16_9')">
+      <div class="hero-content">
+        <h1>智慧校园 · 7×24 答疑</h1>
+        <p class="subtitle">基于 RAG 私有知识库的 AI 智能助手<br>基于本校真实文档回答 · 杜绝大模型幻觉</p>
+        <div class="hero-btns">
+          <a href="AI咨询悬浮.html" class="hero-btn hero-btn-primary">体验 AI 咨询</a>
+          <a href="#about" class="hero-btn hero-btn-ghost">关于学校</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-slide"
+      style="background-image: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=university%20sports%20field%20with%20running%20track%2C%20green%20turf%2C%20blue%20sky%2C%20modern%20campus%2C%20aerial%20view&image_size=landscape_16_9')">
+      <div class="hero-content">
+        <h1>规范化的参观流程</h1>
+        <p class="subtitle">线上预约 · 场次限流 · 人工审核 · 智能答疑<br>让校园参观井然有序，让访客体验如沐春风</p>
+        <div class="hero-btns">
+          <a href="场次列表.html" class="hero-btn hero-btn-primary">查看可预约场次</a>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-dots">
+      <span class="active" onclick="goTo(0)"></span>
+      <span onclick="goTo(1)"></span>
+      <span onclick="goTo(2)"></span>
+      <span onclick="goTo(3)"></span>
+    </div>
+  </div>
+
+  <!-- 校园简介 -->
+  <section class="section intro-section" id="about">
+    <div class="section-header">
+      <div class="eyebrow">ABOUT US</div>
+      <h2>关于哈尔滨剑桥学院</h2>
+      <p class="desc">哈尔滨剑桥学院创建以来，始终秉持"励志、勤奋、创新、笃行"的校训，致力于培养高素质应用型人才。</p>
+    </div>
+    <div class="intro-grid">
+      <div class="intro-image"></div>
+      <div class="intro-text">
+        <h3>智能科学与工程学院</h3>
+        <p>智能科学与工程学院是哈尔滨剑桥学院重点建设的二级学院之一，紧跟国家人工智能与数字化转型战略，面向智能制造、数字经济等新兴产业，培养具有创新精神和实践能力的应用型技术人才。</p>
+        <p>学院下设计算机科学与技术、人工智能、软件工程三个本科专业，配备现代化教学楼、智能化实验室、专业图书馆、室内体育馆，每年面向社会访客与新生家长开放参观考察。</p>
+        <p>为规范校园对外开放管理、降低人工咨询压力，学院率先试点"线上预约 + 场次限流 + RAG 智能咨询"一体化系统，将数字化管理理念延伸至校园对外开放服务。</p>
+        <div class="intro-stats">
+          <div class="intro-stat">
+            <div class="num">800+</div>
+            <div class="label">亩校园占地</div>
+          </div>
+          <div class="intro-stat">
+            <div class="num">3</div>
+            <div class="label">本科专业</div>
+          </div>
+          <div class="intro-stat">
+            <div class="num">200+</div>
+            <div class="label">专业教师</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 数据统计 -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div>
+        <div class="num">156</div>
+        <div class="label">累计访客数</div>
+      </div>
+      <div>
+        <div class="num">428</div>
+        <div class="label">AI 咨询次数</div>
+      </div>
+      <div>
+        <div class="num">12</div>
+        <div class="label">今日新增预约</div>
+      </div>
+      <div>
+        <div class="num">3</div>
+        <div class="label">知识库文档</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 校园风光图集 -->
+  <section class="section gallery-section" id="gallery">
+    <div class="section-header">
+      <div class="eyebrow">CAMPUS GALLERY</div>
+      <h2>校园风光</h2>
+      <p class="desc">现代化的教学楼、图书馆、体育馆与优美的校园环境，等待您的实地探访。</p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item"
+        style="background-image: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20university%20teaching%20building%20exterior%2C%20glass%20facade%2C%20sunlight%2C%20students%20walking%2C%20chinese%20campus&image_size=square')">
+        <div class="caption">教学楼</div>
+      </div>
+      <div class="gallery-item"
+        style="background-image: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=university%20library%20interior%2C%20bookshelves%2C%20reading%20area%2C%20warm%20lighting%2C%20students%20studying%2C%20modern%20architecture&image_size=square')">
+        <div class="caption">图书馆</div>
+      </div>
+      <div class="gallery-item"
+        style="background-image: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=university%20sports%20field%20with%20running%20track%2C%20green%20turf%2C%20blue%20sky%2C%20modern%20campus%2C%20aerial%20view&image_size=square')">
+        <div class="caption">体育场</div>
+      </div>
+      <div class="gallery-item"
+        style="background-image: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20university%20laboratory%20interior%2C%20computers%2C%20AI%20equipment%2C%20clean%20tech%20environment%2C%20blue%20lighting&image_size=square')">
+        <div class="caption">智能实验室</div>
+      </div>
+      <div class="gallery-item"
+        style="background-image: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=university%20cafeteria%20interior%2C%20modern%20dining%20hall%2C%20food%20court%2C%20warm%20lighting%2C%20students%20eating&image_size=square')">
+        <div class="caption">学生餐厅</div>
+      </div>
+      <div class="gallery-item"
+        style="background-image: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=university%20dormitory%20building%20exterior%2C%20modern%20student%20housing%2C%20green%20trees%2C%20blue%20sky%2C%20chinese%20campus&image_size=square')">
+        <div class="caption">学生公寓</div>
+      </div>
+      <div class="gallery-item"
+        style="background-image: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=university%20campus%20garden%20landscape%2C%20cherry%20blossom%2C%20lake%2C%20pavilion%2C%20spring%20season%2C%20beautiful%20scenery&image_size=square')">
+        <div class="caption">校园园林</div>
+      </div>
+      <div class="gallery-item"
+        style="background-image: url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=university%20campus%20night%20view%2C%20library%20building%20lights%2C%20trees%20silhouette%2C%20starry%20sky%2C%20peaceful%20atmosphere&image_size=square')">
+        <div class="caption">校园夜景</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 学院专业介绍 -->
+  <section class="section major-section" id="majors">
+    <div class="section-header">
+      <div class="eyebrow">PROGRAMS</div>
+      <h2>学院专业</h2>
+      <p class="desc">智能科学与工程学院下设三个本科专业，欢迎考生与家长实地参观考察。</p>
+    </div>
+    <div class="major-grid">
+      <div class="major-card">
+        <div class="major-icon">💻</div>
+        <span class="major-tag">工学学士</span>
+        <h3>计算机科学与技术</h3>
+        <p>培养具备计算机软硬件系统设计与开发能力的应用型技术人才。核心课程：数据结构、操作系统、数据库原理、计算机网络、软件工程。</p>
+      </div>
+      <div class="major-card">
+        <div class="major-icon">🤖</div>
+        <span class="major-tag">工学学士</span>
+        <h3>人工智能</h3>
+        <p>面向智能制造与数字经济产业，培养机器学习、深度学习、计算机视觉、自然语言处理领域的应用型 AI 人才。配套现代化 AI 实验室。</p>
+      </div>
+      <div class="major-card">
+        <div class="major-icon">⚙️</div>
+        <span class="major-tag">工学学士</span>
+        <h3>软件工程</h3>
+        <p>培养具备软件项目全生命周期管理能力、熟悉主流开发框架与工程实践的应用型软件工程师。强调项目实战与团队协作。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 最新公告 -->
+  <section class="section news-section">
+    <div class="section-header">
+      <div class="eyebrow">LATEST NEWS</div>
+      <h2>最新公告</h2>
+      <p class="desc">了解校园开放日安排、参观须知、专业介绍等最新动态。</p>
+    </div>
+    <div class="news-layout">
+      <div class="news-main">
+        <div class="news-featured">
+          <div class="meta">2026-03-15 · 校园开放日</div>
+          <h3>2026 年春季校园开放日公告</h3>
+          <p>为方便考生和家长了解我校，将于 2026 年 4 月 12 日举办春季校园开放日活动。届时学院将开放教学楼、实验室、图书馆等场所，安排专业老师现场讲解，欢迎预约参观...</p>
+        </div>
+        <div class="news-list-item">
+          <div class="title">参观须知更新通知：访客凭预约成功短信和身份证件入校...</div>
+          <div class="date">03-10</div>
+        </div>
+        <div class="news-list-item">
+          <div class="title">智能科学与工程学院三个本科专业详细介绍</div>
+          <div class="date">03-05</div>
+        </div>
+        <div class="news-list-item">
+          <div class="title">校园停车场使用说明：东门北侧访客停车场启用</div>
+          <div class="date">02-28</div>
+        </div>
+        <div class="news-list-item">
+          <div class="title">假期校园参观安排：寒暑假暂停开放</div>
+          <div class="date">02-20</div>
+        </div>
+        <a href="公告列表.html" style="display:block;text-align:center;padding:12px;color:#409EFF;font-size:14px">查看全部公告
+          →</a>
+      </div>
+      <div class="news-side">
+        <div class="news-side-card">
+          <h4>快速入口</h4>
+          <a href="场次列表.html" class="quick-link">立即预约参观</a>
+          <a href="AI咨询悬浮.html" class="quick-link">AI 智能咨询</a>
+          <a href="#majors" class="quick-link">学院专业介绍</a>
+          <a href="#gallery" class="quick-link">校园风光图集</a>
+          <a href="公告列表.html" class="quick-link">校园公告</a>
+        </div>
+        <div class="news-side-card">
+          <h4>参观须知</h4>
+          <p style="font-size:13px;color:#606266;line-height:1.7">· 每日 09:00-16:00 开放<br>· 凭预约短信 + 身份证入校<br>· 团体（10+
+            人）提前 3 日联系<br>· 访客停车场免费 2 小时</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 近期可预约场次 -->
+  <section class="section session-section">
+    <div class="section-header">
+      <div class="eyebrow">SESSIONS</div>
+      <h2>近期可预约场次</h2>
+      <p class="desc">每日分上午/下午两场，自动过滤过期、下架、名额满场次。</p>
+    </div>
+    <div class="session-grid">
+      <div class="session-card">
+        <div class="date">2026-04-12 周六</div>
+        <div class="day">上午场</div>
+        <span class="time">09:00 - 11:00</span>
+        <div class="capacity"><span>已预约</span><span style="color:#67C23A">12 / 50</span></div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:24%"></div>
+        </div>
+        <a href="预约提交.html" class="book-btn">立即预约</a>
+      </div>
+      <div class="session-card">
+        <div class="date">2026-04-12 周六</div>
+        <div class="day">下午场</div>
+        <span class="time">14:00 - 16:00</span>
+        <div class="capacity"><span>已预约</span><span style="color:#67C23A">28 / 50</span></div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:56%"></div>
+        </div>
+        <a href="预约提交.html" class="book-btn">立即预约</a>
+      </div>
+      <div class="session-card full">
+        <div class="date">2026-04-13 周日</div>
+        <div class="day">上午场</div>
+        <span class="time" style="background:#fef0f0;color:#F56C6C">09:00 - 11:00</span>
+        <div class="capacity"><span>已预约</span><span style="color:#F56C6C">50 / 50</span></div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:100%"></div>
+        </div>
+        <a class="book-btn">名额已满</a>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px">
+      <a href="场次列表.html" class="btn btn-primary" style="padding:12px 32px;border-radius:30px">查看全部场次 →</a>
+    </div>
+  </section>
+
+  <!-- AI 入口 banner -->
+  <section class="ai-banner">
+    <h2>🎓 智能咨询助手 7×24 小时在线</h2>
+    <p>基于校园私有知识库的 AI 助手，可解答校园开放时间、参观路线、入校须知、专业介绍等问题。基于本校真实文档回答，杜绝大模型幻觉。</p>
+    <a href="AI咨询悬浮.html" class="ai-btn">立即咨询 AI 助手 →</a>
+  </section>
+
+  <!-- AI 悬浮按钮 -->
+  <a href="AI咨询悬浮.html" class="ai-float-btn">AI 咨询</a>
+
+  <!-- 页脚 -->
+  <div class="footer" style="background:#303133;color:#909399;padding:32px">
+    <div
+      style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:left">
+      <div>
+        <h4 style="color:#fff;margin-bottom:12px">哈尔滨剑桥学院</h4>
+        <p style="font-size:13px;line-height:1.8">智能科学与工程学院<br>地址：哈尔滨市<br>电话：0451-xxxx-xxxx</p>
+      </div>
+      <div>
+        <h4 style="color:#fff;margin-bottom:12px">访客服务</h4>
+        <p style="font-size:13px;line-height:1.8"><a href="场次列表.html" style="color:#909399">预约参观</a><br><a
+            href="公告列表.html" style="color:#909399">校园公告</a><br><a href="AI咨询悬浮.html" style="color:#909399">AI 咨询</a></p>
+      </div>
+      <div>
+        <h4 style="color:#fff;margin-bottom:12px">学院专业</h4>
+        <p style="font-size:13px;line-height:1.8">计算机科学与技术<br>人工智能<br>软件工程</p>
+      </div>
+      <div>
+        <h4 style="color:#fff;margin-bottom:12px">关于系统</h4>
+        <p style="font-size:13px;line-height:1.8">基于 SpringBoot + RAG<br>2026 届毕业设计<br>学生：钟啸林</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:24px;font-size:12px;color:#606266">© 2026 哈尔滨剑桥学院 智能科学与工程学院 · 毕业设计 · 所有权利保留
+    </div>
+  </div>
+
+  <script>
+    // 简易轮播逻辑：每 5 秒自动切换，点击点跳转
+    let current = 0;
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.carousel-dots span');
+    function goTo(idx) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = idx;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+    }
+    setInterval(() => goTo((current + 1) % slides.length), 5000);
+  </script>
+</body>
+
+</html>

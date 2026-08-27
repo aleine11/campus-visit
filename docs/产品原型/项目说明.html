@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>项目说明 - 校园参观预约与智能咨询系统</title>
+  <link rel="stylesheet" href="css/common.css">
+</head>
+<body>
+  <div class="hero">
+    <h1>基于 SpringBoot+RAG 的校园参观预约与智能咨询系统</h1>
+    <p>哈尔滨剑桥学院 · 智能科学与工程学院 · 2026 届毕业设计</p>
+    <p style="margin-top:12px">学生：钟啸林 &nbsp;&nbsp; 指导教师：郭旭 副教授</p>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-title">项目简介</div>
+      <p>面向高校对外开放参观场景的一体化 Web 系统，集成：</p>
+      <ul style="margin:12px 0 0 24px;line-height:1.8">
+        <li>访客线上预约参观（注册登录、查看场次、提交预约、订单状态管理）</li>
+        <li>管理员后台审核管理（场次、预约、访客、公告、知识库）</li>
+        <li>RAG 私有知识库 AI 智能咨询（基于本校文档，杜绝大模型幻觉）</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">技术栈</div>
+      <table class="table">
+        <tr><th>层级</th><th>技术</th></tr>
+        <tr><td>后端</td><td>SpringBoot 3.2 + MyBatis-Plus + JWT</td></tr>
+        <tr><td>前端</td><td>Vue3 + Element-Plus + Axios + Vite</td></tr>
+        <tr><td>业务数据库</td><td>MySQL 8.0（7 张表）</td></tr>
+        <tr><td>向量数据库</td><td>Milvus（Docker，768 维，集合 campus_knowledge）</td></tr>
+        <tr><td>嵌入模型</td><td>BGE-small-zh（本地）</td></tr>
+        <tr><td>大模型</td><td>阿里百炼 DashScope（qwen-plus）</td></tr>
+        <tr><td>文档解析</td><td>PDFBox + POI</td></tr>
+        <tr><td>RAG 编排</td><td>手写实现（不依赖 LangChain 框架）</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">原型页面索引</div>
+      <div class="grid-3">
+        <div class="card" style="padding:12px">
+          <div class="card-title" style="font-size:14px">访客前台</div>
+          <ul style="line-height:2">
+            <li><a href="访客首页.html">访客首页</a></li>
+            <li><a href="场次列表.html">可预约场次</a></li>
+            <li><a href="预约提交.html">预约提交</a></li>
+            <li><a href="我的预约.html">我的预约</a></li>
+            <li><a href="AI咨询悬浮.html">AI 咨询</a></li>
+            <li><a href="公告列表.html">校园公告</a></li>
+            <li><a href="登录.html">登录/注册</a></li>
+          </ul>
+        </div>
+        <div class="card" style="padding:12px">
+          <div class="card-title" style="font-size:14px">管理员后台</div>
+          <ul style="line-height:2">
+            <li><a href="管理员后台首页.html">后台首页看板</a></li>
+            <li><a href="场次管理.html">参观场次管理</a></li>
+            <li><a href="预约审核.html">预约订单审核</a></li>
+            <li><a href="访客用户管理.html">访客用户管理</a></li>
+            <li><a href="公告管理.html">校园公告管理</a></li>
+            <li><a href="RAG知识库管理.html">RAG 知识库管理</a></li>
+            <li><a href="问答日志统计.html">问答日志统计</a></li>
+            <li><a href="管理员账号管理.html">管理员账号管理</a></li>
+          </ul>
+        </div>
+        <div class="card" style="padding:12px">
+          <div class="card-title" style="font-size:14px">系统状态页</div>
+          <ul style="line-height:2">
+            <li><a href="加载中页面.html">加载中状态</a></li>
+            <li><a href="空页面.html">空数据状态</a></li>
+            <li><a href="异常页面.html">异常错误状态</a></li>
+            <li><a href="无权限页面.html">无权限访问</a></li>
+            <li><a href="产品架构图.html">产品架构图</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">原型使用说明</div>
+      <p>本组原型为中保真原型，所有页面可直接在浏览器打开运行。</p>
+      <ul style="margin:8px 0 0 24px;line-height:1.8">
+        <li>使用真实业务文字和模拟业务数据填充，便于对齐设计认知</li>
+        <li>页面之间支持跳转：点击菜单项/按钮可跳转到对应页面</li>
+        <li>表单可输入，弹窗可打开/关闭，演示交互逻辑</li>
+        <li>未纠结精细配色，统一灰度 + 主色调（校园蓝 #409EFF）</li>
+        <li>开发阶段（Stage2）严格对标此原型实现，禁止私自改页面</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer">© 2026 哈尔滨剑桥学院 智能科学与工程学院 · 毕业设计</div>
+</body>
+</html>

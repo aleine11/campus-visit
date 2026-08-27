@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>后台首页 - 校园参观预约与智能咨询系统</title>
+  <link rel="stylesheet" href="css/common.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="sidebar-logo">校园参观后台</div>
+      <ul>
+        <a href="管理员后台首页.html"><li class="active">首页</li></a>
+        <a href="场次管理.html"><li>参观场次管理</li></a>
+        <a href="预约审核.html"><li>预约订单审核</li></a>
+        <a href="访客用户管理.html"><li>访客用户管理</li></a>
+        <a href="公告管理.html"><li>校园公告管理</li></a>
+        <a href="RAG知识库管理.html"><li>RAG 知识库管理</li></a>
+        <a href="问答日志统计.html"><li>问答日志统计</li></a>
+        <a href="管理员账号管理.html"><li>管理员账号管理</li></a>
+      </ul>
+    </aside>
+
+    <div class="admin-main">
+      <div class="admin-topbar">
+        <span>后台首页</span>
+        <a href="登录.html" class="btn btn-sm">退出登录</a>
+      </div>
+
+      <div class="admin-content">
+        <div class="grid-4">
+          <div class="stat-card">
+            <div class="label">今日新增预约</div>
+            <div class="value">12</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">待审核订单</div>
+            <div class="value" style="color:#E6A23C">8</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">访客总数</div>
+            <div class="value" style="color:#67C23A">156</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">AI 问答次数</div>
+            <div class="value" style="color:#909399">428</div>
+          </div>
+        </div>
+
+        <div class="card mt-24">
+          <div class="card-title">近 7 天预约趋势</div>
+          <div style="height:240px;background:#f5f7fa;border-radius:4px;padding:16px;display:flex;align-items:flex-end;justify-content:space-around">
+            <div style="text-align:center">
+              <div style="width:40px;height:80px;background:#409EFF"></div>
+              <div class="text-muted" style="margin-top:4px">3-20</div>
+            </div>
+            <div style="text-align:center">
+              <div style="width:40px;height:120px;background:#409EFF"></div>
+              <div class="text-muted" style="margin-top:4px">3-21</div>
+            </div>
+            <div style="text-align:center">
+              <div style="width:40px;height:60px;background:#409EFF"></div>
+              <div class="text-muted" style="margin-top:4px">3-22</div>
+            </div>
+            <div style="text-align:center">
+              <div style="width:40px;height:180px;background:#409EFF"></div>
+              <div class="text-muted" style="margin-top:4px">3-23</div>
+            </div>
+            <div style="text-align:center">
+              <div style="width:40px;height:140px;background:#409EFF"></div>
+              <div class="text-muted" style="margin-top:4px">3-24</div>
+            </div>
+            <div style="text-align:center">
+              <div style="width:40px;height:100px;background:#409EFF"></div>
+              <div class="text-muted" style="margin-top:4px">3-25</div>
+            </div>
+            <div style="text-align:center">
+              <div style="width:40px;height:200px;background:#67C23A"></div>
+              <div class="text-muted" style="margin-top:4px">今日</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-24">
+          <div class="flex-between">
+            <div class="card-title" style="margin-bottom:0">最近 5 条待审核订单</div>
+            <a href="预约审核.html" class="btn btn-sm">前往审核</a>
+          </div>
+          <table class="table mt-16">
+            <thead>
+              <tr>
+                <th>订单ID</th><th>场次</th><th>访客姓名</th><th>人数</th><th>提交时间</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>10234</td><td>2026-04-12 09:00-11:00</td><td>钟啸林</td><td>2</td><td>2026-03-20 10:15</td><td><a href="预约审核.html" class="btn btn-sm btn-primary">审核</a></td></tr>
+              <tr><td>10233</td><td>2026-04-12 14:00-16:00</td><td>李芳</td><td>3</td><td>2026-03-20 09:55</td><td><a href="预约审核.html" class="btn btn-sm btn-primary">审核</a></td></tr>
+              <tr><td>10232</td><td>2026-04-13 09:00-11:00</td><td>王伟</td><td>1</td><td>2026-03-20 09:30</td><td><a href="预约审核.html" class="btn btn-sm btn-primary">审核</a></td></tr>
+              <tr><td>10231</td><td>2026-04-13 14:00-16:00</td><td>赵敏</td><td>4</td><td>2026-03-19 16:48</td><td><a href="预约审核.html" class="btn btn-sm btn-primary">审核</a></td></tr>
+              <tr><td>10230</td><td>2026-04-12 14:00-16:00</td><td>陈刚</td><td>2</td><td>2026-03-19 14:22</td><td><a href="预约审核.html" class="btn btn-sm btn-primary">审核</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

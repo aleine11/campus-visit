@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>问答日志统计 - 校园参观预约与智能咨询系统</title>
+  <link rel="stylesheet" href="css/common.css">
+  <style>
+    .tabs { display: flex; border-bottom: 1px solid #DCDFE6; margin-bottom: 16px; }
+    .tabs div { padding: 8px 16px; cursor: pointer; border-bottom: 2px solid transparent; }
+    .tabs div.active { color: #409EFF; border-bottom-color: #409EFF; }
+    .word-cloud { background: #f5f7fa; padding: 24px; border-radius: 4px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: center; min-height: 240px; }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="sidebar-logo">校园参观后台</div>
+      <ul>
+        <a href="管理员后台首页.html"><li>首页</li></a>
+        <a href="场次管理.html"><li>参观场次管理</li></a>
+        <a href="预约审核.html"><li>预约订单审核</li></a>
+        <a href="访客用户管理.html"><li>访客用户管理</li></a>
+        <a href="公告管理.html"><li>校园公告管理</li></a>
+        <a href="RAG知识库管理.html"><li>RAG 知识库管理</li></a>
+        <a href="问答日志统计.html"><li class="active">问答日志统计</li></a>
+        <a href="管理员账号管理.html"><li>管理员账号管理</li></a>
+      </ul>
+    </aside>
+
+    <div class="admin-main">
+      <div class="admin-topbar">
+        <span>问答日志统计</span>
+        <a href="登录.html" class="btn btn-sm">退出登录</a>
+      </div>
+
+      <div class="admin-content">
+        <div class="card">
+          <div class="tabs">
+            <div class="active">问答记录</div>
+            <div>高频统计</div>
+          </div>
+
+          <div class="flex gap-16 mb-16">
+            <div class="form-item" style="margin:0">
+              <label>访客姓名</label>
+              <input type="text" placeholder="模糊查询" style="width:160px">
+            </div>
+            <div class="form-item" style="margin:0">
+              <label>关键词</label>
+              <input type="text" placeholder="问题关键词" style="width:160px">
+            </div>
+            <div class="form-item" style="margin:0">
+              <label>时间范围</label>
+              <input type="date" style="width:140px">
+            </div>
+            <button class="btn btn-primary">查询</button>
+          </div>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th><th>访客</th><th>用户问题</th><th>AI 回答（节选）</th><th>参考来源</th><th>时间</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>5001</td><td>钟啸林</td><td>校园开放时间是什么时候？</td>
+                <td>每日 09:00-16:00，分上下午两场...</td>
+                <td>校园参观须知.pdf</td><td>2026-03-20 11:00</td>
+              </tr>
+              <tr>
+                <td>5002</td><td>李芳</td><td>入校需要带什么证件？</td>
+                <td>身份证原件 + 预约短信...</td>
+                <td>入校须知.docx</td><td>2026-03-20 10:30</td>
+              </tr>
+              <tr>
+                <td>5003</td><td>王伟</td><td>能在校园里停车吗？</td>
+                <td>东门北侧访客停车场，免费 2 小时...</td>
+                <td>入校须知.docx</td><td>2026-03-20 09:45</td>
+              </tr>
+              <tr>
+                <td>5004</td><td>赵敏</td><td>校园周边有什么好吃的？</td>
+                <td style="color:#F56C6C">知识库未查询到相关内容，请咨询人工老师...</td>
+                <td>未命中</td><td>2026-03-20 08:30</td>
+              </tr>
+              <tr>
+                <td>5005</td><td>陈刚</td><td>智能科学与工程学院有哪些专业？</td>
+                <td>计算机科学与技术、人工智能、软件工程...</td>
+                <td>学院专业介绍.pdf</td><td>2026-03-19 16:20</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="pagination">
+            <button class="btn btn-sm">上一页</button>
+            <button class="btn btn-sm btn-primary">1</button>
+            <button class="btn btn-sm">2</button>
+            <button class="btn btn-sm">下一页</button>
+            <span class="text-muted" style="line-height:32px;margin-left:8px">共 86 页 428 条</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">高频问题关键词云</div>
+          <div class="word-cloud">
+            <span style="font-size:32px;color:#409EFF;font-weight:600">参观时间</span>
+            <span style="font-size:28px;color:#67C23A;font-weight:600">入校证件</span>
+            <span style="font-size:24px;color:#E6A23C;font-weight:600">停车</span>
+            <span style="font-size:22px;color:#909399">专业介绍</span>
+            <span style="font-size:20px;color:#409EFF">校园路线</span>
+            <span style="font-size:18px;color:#67C23A">图书馆</span>
+            <span style="font-size:18px;color:#909399">体育馆</span>
+            <span style="font-size:16px;color:#606266">宿舍</span>
+            <span style="font-size:14px;color:#909399">报考咨询</span>
+            <span style="font-size:14px;color:#909399">开放日</span>
+            <span style="font-size:12px;color:#c0c4cc">社团</span>
+            <span style="font-size:12px;color:#c0c4cc">食堂</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Top 10 高频问题（柱状图）</div>
+          <div style="padding:16px 0">
+            <div style="margin-bottom:8px"><div style="width:100px;display:inline-block">参观时间</div><div style="display:inline-block;height:20px;background:#409EFF;width:280px;vertical-align:middle"></div><span style="margin-left:8px">68 次</span></div>
+            <div style="margin-bottom:8px"><div style="width:100px;display:inline-block">入校证件</div><div style="display:inline-block;height:20px;background:#409EFF;width:240px;vertical-align:middle"></div><span style="margin-left:8px">52 次</span></div>
+            <div style="margin-bottom:8px"><div style="width:100px;display:inline-block">停车</div><div style="display:inline-block;height:20px;background:#409EFF;width:180px;vertical-align:middle"></div><span style="margin-left:8px">38 次</span></div>
+            <div style="margin-bottom:8px"><div style="width:100px;display:inline-block">专业介绍</div><div style="display:inline-block;height:20px;background:#409EFF;width:150px;vertical-align:middle"></div><span style="margin-left:8px">32 次</span></div>
+            <div style="margin-bottom:8px"><div style="width:100px;display:inline-block">校园路线</div><div style="display:inline-block;height:20px;background:#409EFF;width:120px;vertical-align:middle"></div><span style="margin-left:8px">25 次</span></div>
+            <div style="margin-bottom:8px"><div style="width:100px;display:inline-block">图书馆</div><div style="display:inline-block;height:20px;background:#409EFF;width:90px;vertical-align:middle"></div><span style="margin-left:8px">18 次</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

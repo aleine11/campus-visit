@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>访客用户管理 - 校园参观预约与智能咨询系统</title>
+  <link rel="stylesheet" href="css/common.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="sidebar-logo">校园参观后台</div>
+      <ul>
+        <a href="管理员后台首页.html"><li>首页</li></a>
+        <a href="场次管理.html"><li>参观场次管理</li></a>
+        <a href="预约审核.html"><li>预约订单审核</li></a>
+        <a href="访客用户管理.html"><li class="active">访客用户管理</li></a>
+        <a href="公告管理.html"><li>校园公告管理</li></a>
+        <a href="RAG知识库管理.html"><li>RAG 知识库管理</li></a>
+        <a href="问答日志统计.html"><li>问答日志统计</li></a>
+        <a href="管理员账号管理.html"><li>管理员账号管理</li></a>
+      </ul>
+    </aside>
+
+    <div class="admin-main">
+      <div class="admin-topbar">
+        <span>访客用户管理</span>
+        <a href="登录.html" class="btn btn-sm">退出登录</a>
+      </div>
+
+      <div class="admin-content">
+        <div class="card">
+          <div class="flex gap-16">
+            <div class="form-item" style="margin:0">
+              <label>用户名/姓名</label>
+              <input type="text" placeholder="模糊查询" style="width:200px">
+            </div>
+            <div class="form-item" style="margin:0">
+              <label>状态</label>
+              <select style="width:140px">
+                <option>全部</option><option>正常</option><option>冻结</option>
+              </select>
+            </div>
+            <button class="btn btn-primary">查询</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th><th>用户名</th><th>真实姓名</th><th>手机号</th><th>状态</th><th>注册时间</th><th>预约数</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1001</td><td>zhongxiaolin</td><td>钟啸林</td><td>138****8000</td>
+                <td><span class="tag tag-success">正常</span></td><td>2026-02-10 10:00</td><td>3</td>
+                <td>
+                  <button class="btn btn-sm btn-warning" onclick="if(confirm('确认冻结该账号？冻结后无法登录'))alert('已冻结')">冻结</button>
+                  <a href="预约审核.html" class="btn btn-sm">查看预约</a>
+                </td>
+              </tr>
+              <tr>
+                <td>1002</td><td>lifang</td><td>李芳</td><td>139****9000</td>
+                <td><span class="tag tag-success">正常</span></td><td>2026-02-11 14:00</td><td>5</td>
+                <td>
+                  <button class="btn btn-sm btn-warning">冻结</button>
+                  <a href="预约审核.html" class="btn btn-sm">查看预约</a>
+                </td>
+              </tr>
+              <tr>
+                <td>1005</td><td>wangwei</td><td>王伟</td><td>137****7000</td>
+                <td><span class="tag tag-danger">冻结</span></td><td>2026-02-15 09:30</td><td>2</td>
+                <td>
+                  <button class="btn btn-sm btn-success">解冻</button>
+                  <a href="预约审核.html" class="btn btn-sm">查看预约</a>
+                </td>
+              </tr>
+              <tr>
+                <td>1008</td><td>zhaomin</td><td>赵敏</td><td>136****6000</td>
+                <td><span class="tag tag-success">正常</span></td><td>2026-02-20 11:00</td><td>8</td>
+                <td>
+                  <button class="btn btn-sm btn-warning">冻结</button>
+                  <a href="预约审核.html" class="btn btn-sm">查看预约</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="pagination">
+            <button class="btn btn-sm">上一页</button>
+            <button class="btn btn-sm btn-primary">1</button>
+            <button class="btn btn-sm">2</button>
+            <button class="btn btn-sm">下一页</button>
+            <span class="text-muted" style="line-height:32px;margin-left:8px">共 2 页 156 条</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

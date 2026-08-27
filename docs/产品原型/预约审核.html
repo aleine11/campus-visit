@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>预约订单审核 - 校园参观预约与智能咨询系统</title>
+  <link rel="stylesheet" href="css/common.css">
+  <style>
+    .modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; justify-content: center; align-items: center; z-index: 200; }
+    .modal { background: #fff; border-radius: 4px; width: 480px; padding: 24px; }
+    .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+    .modal-footer { text-align: right; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="sidebar-logo">校园参观后台</div>
+      <ul>
+        <a href="管理员后台首页.html"><li>首页</li></a>
+        <a href="场次管理.html"><li>参观场次管理</li></a>
+        <a href="预约审核.html"><li class="active">预约订单审核</li></a>
+        <a href="访客用户管理.html"><li>访客用户管理</li></a>
+        <a href="公告管理.html"><li>校园公告管理</li></a>
+        <a href="RAG知识库管理.html"><li>RAG 知识库管理</li></a>
+        <a href="问答日志统计.html"><li>问答日志统计</li></a>
+        <a href="管理员账号管理.html"><li>管理员账号管理</li></a>
+      </ul>
+    </aside>
+
+    <div class="admin-main">
+      <div class="admin-topbar">
+        <span>预约订单审核</span>
+        <a href="登录.html" class="btn btn-sm">退出登录</a>
+      </div>
+
+      <div class="admin-content">
+        <div class="card">
+          <div class="flex gap-16">
+            <div class="form-item" style="margin:0">
+              <label>访客姓名</label>
+              <input type="text" placeholder="模糊查询" style="width:160px">
+            </div>
+            <div class="form-item" style="margin:0">
+              <label>状态</label>
+              <select style="width:160px">
+                <option>全部</option>
+                <option>待审核</option>
+                <option>通过</option>
+                <option>驳回</option>
+                <option>已取消</option>
+              </select>
+            </div>
+            <div class="form-item" style="margin:0">
+              <label>提交时间</label>
+              <input type="date" style="width:160px">
+            </div>
+            <button class="btn btn-primary">查询</button>
+            <button class="btn">重置</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th><th>场次</th><th>访客</th><th>人数</th><th>手机号</th><th>参观事由</th><th>状态</th><th>提交时间</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>10234</td><td>2026-04-12 09:00-11:00</td><td>钟啸林</td><td>2</td><td>138****8000</td>
+                <td>考生家长了解专业</td>
+                <td><span class="tag tag-warning">待审核</span></td><td>2026-03-20 10:15</td>
+                <td>
+                  <button class="btn btn-sm btn-success" onclick="if(confirm('确认通过该预约？'))alert('已通过')">通过</button>
+                  <button class="btn btn-sm btn-danger" onclick="document.getElementById('modal-reject').style.display='flex'">驳回</button>
+                </td>
+              </tr>
+              <tr>
+                <td>10233</td><td>2026-04-12 14:00-16:00</td><td>李芳</td><td>3</td><td>139****9000</td>
+                <td>参观考察学校</td>
+                <td><span class="tag tag-warning">待审核</span></td><td>2026-03-20 09:55</td>
+                <td>
+                  <button class="btn btn-sm btn-success">通过</button>
+                  <button class="btn btn-sm btn-danger" onclick="document.getElementById('modal-reject').style.display='flex'">驳回</button>
+                </td>
+              </tr>
+              <tr>
+                <td>10228</td><td>2026-04-11 09:00-11:00</td><td>王伟</td><td>1</td><td>137****7000</td>
+                <td>个人参观</td>
+                <td><span class="tag tag-success">通过</span></td><td>2026-03-18 14:20</td>
+                <td><span class="text-muted">已审核（管理员：admin）</span></td>
+              </tr>
+              <tr>
+                <td>10225</td><td>2026-04-10 14:00-16:00</td><td>赵敏</td><td>4</td><td>136****6000</td>
+                <td>团体参观</td>
+                <td><span class="tag tag-danger">驳回</span></td><td>2026-03-17 11:00</td>
+                <td><span class="text-muted">驳回原因：人数超出剩余名额</span></td>
+              </tr>
+              <tr>
+                <td>10220</td><td>2026-04-09 09:00-11:00</td><td>陈刚</td><td>2</td><td>135****5000</td>
+                <td>家长参观</td>
+                <td><span class="tag tag-info">已取消</span></td><td>2026-03-15 09:30</td>
+                <td><span class="text-muted">访客主动取消</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="pagination">
+            <button class="btn btn-sm">上一页</button>
+            <button class="btn btn-sm btn-primary">1</button>
+            <button class="btn btn-sm">2</button>
+            <button class="btn btn-sm">3</button>
+            <button class="btn btn-sm">下一页</button>
+            <span class="text-muted" style="line-height:32px;margin-left:8px">共 3 页 28 条</span>
+          </div>
+        </div>
+
+        <div class="card" style="padding:12px;background:#fdf6ec;border:1px solid #f5dab1">
+          <strong style="color:#b88230">审核业务规则</strong>
+          <ul style="margin:8px 0 0 24px;line-height:1.8;color:#606266">
+            <li>驳回必须填写驳回原因（5-200 字），否则禁用提交</li>
+            <li>已审核订单（通过/驳回）不可重复审核</li>
+            <li>审核通过后场次已预约人数 +N（按参观人数）</li>
+            <li>记录审核人 + 审核时间</li>
+            <li>"已取消"状态由访客主动取消产生</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 驳回弹窗 -->
+  <div class="modal-mask" id="modal-reject" style="display:none">
+    <div class="modal">
+      <div class="modal-title">驳回预约订单</div>
+      <p class="text-muted mb-8">订单 ID：10234 · 访客：钟啸林 · 场次：2026-04-12 09:00-11:00</p>
+      <div class="form-item">
+        <label>驳回原因</label>
+        <textarea placeholder="请填写驳回原因（5-200 字）" style="width:340px;height:100px"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="document.getElementById('modal-reject').style.display='none'">取消</button>
+        <button class="btn btn-danger" onclick="document.getElementById('modal-reject').style.display='none';alert('已驳回')">确认驳回</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

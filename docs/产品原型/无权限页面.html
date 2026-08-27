@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>无权限 - 校园参观预约与智能咨询系统</title>
+  <link rel="stylesheet" href="css/common.css">
+  <style>
+    .state-container { min-height: 100vh; display: flex; justify-content: center; align-items: center; background: #f5f7fa; }
+    .state-content { text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="state-container">
+    <div class="state-content">
+      <div style="font-size:80px;color:#E6A23C">🔒</div>
+      <h1 style="font-size:48px;color:#303133;margin:16px 0">403 无权限访问</h1>
+      <p style="color:#909399;margin-bottom:24px">您当前角色无权限访问此页面</p>
+      <div class="flex gap-8" style="justify-content:center">
+        <a href="访客首页.html" class="btn btn-primary">返回访客首页</a>
+        <a href="登录.html" class="btn">切换账号登录</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:1000px;margin:24px auto;padding:0 24px">
+    <div class="card">
+      <div class="card-title">权限矩阵说明</div>
+      <table class="table">
+        <thead>
+          <tr><th>路由</th><th>访客</th><th>管理员</th><th>未登录</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>/visitor/home 公告/场次浏览</td><td>✅</td><td>✅</td><td>✅</td></tr>
+          <tr><td>/visitor/reservation/* 预约/我的预约</td><td>✅</td><td>❌</td><td>跳登录</td></tr>
+          <tr><td>/visitor/profile 个人中心</td><td>✅</td><td>❌</td><td>跳登录</td></tr>
+          <tr><td>/visitor/chat/history AI 会话历史</td><td>✅</td><td>❌</td><td>跳登录</td></tr>
+          <tr><td>AI 咨询问答</td><td>✅</td><td>❌</td><td>跳登录</td></tr>
+          <tr><td>/admin/* 后台所有页面</td><td>跳 403</td><td>✅</td><td>跳登录</td></tr>
+          <tr><td>/admin/admin 管理员账号管理</td><td>跳 403</td><td>仅超级管理员</td><td>跳登录</td></tr>
+        </tbody>
+      </table>
+
+      <div class="card" style="padding:12px;background:#fdf6ec;border:1px solid #f5dab1;margin-top:16px">
+        <strong style="color:#b88230">权限实现要点</strong>
+        <ul style="margin:8px 0 0 24px;line-height:1.8;color:#606266">
+          <li>JWT 鉴权：登录返回 token + role（visitor/admin）</li>
+          <li>前端路由守卫：检查 meta.requiresAuth + meta.role</li>
+          <li>后端接口拦截器：检查 token + 角色匹配</li>
+          <li>访客调用管理员接口直接 401/403</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

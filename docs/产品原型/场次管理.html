@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>参观场次管理 - 校园参观预约与智能咨询系统</title>
+  <link rel="stylesheet" href="css/common.css">
+  <style>
+    .modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; justify-content: center; align-items: center; z-index: 200; }
+    .modal { background: #fff; border-radius: 4px; width: 480px; padding: 24px; }
+    .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+    .modal-footer { text-align: right; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="sidebar-logo">校园参观后台</div>
+      <ul>
+        <a href="管理员后台首页.html"><li>首页</li></a>
+        <a href="场次管理.html"><li class="active">参观场次管理</li></a>
+        <a href="预约审核.html"><li>预约订单审核</li></a>
+        <a href="访客用户管理.html"><li>访客用户管理</li></a>
+        <a href="公告管理.html"><li>校园公告管理</li></a>
+        <a href="RAG知识库管理.html"><li>RAG 知识库管理</li></a>
+        <a href="问答日志统计.html"><li>问答日志统计</li></a>
+        <a href="管理员账号管理.html"><li>管理员账号管理</li></a>
+      </ul>
+    </aside>
+
+    <div class="admin-main">
+      <div class="admin-topbar">
+        <span>参观场次管理</span>
+        <a href="登录.html" class="btn btn-sm">退出登录</a>
+      </div>
+
+      <div class="admin-content">
+        <div class="card">
+          <div class="flex-between">
+            <div class="flex gap-16">
+              <input type="date" class="" style="padding:6px 12px;border:1px solid #DCDFE6;border-radius:4px" value="2026-04-12">
+              <button class="btn btn-primary">查询</button>
+            </div>
+            <button class="btn btn-primary" onclick="document.getElementById('modal-add').style.display='flex'">+ 新增场次</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th><th>参观日期</th><th>时段</th><th>最大人数</th><th>已预约</th><th>状态</th><th>创建时间</th><th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>101</td><td>2026-04-12</td><td>09:00-11:00</td><td>50</td><td>12</td>
+                <td><span class="tag tag-success">开放</span></td>
+                <td>2026-03-15 10:00</td>
+                <td>
+                  <button class="btn btn-sm" onclick="document.getElementById('modal-edit').style.display='flex'">编辑</button>
+                  <button class="btn btn-sm btn-warning">下架</button>
+                  <button class="btn btn-sm btn-danger" onclick="if(confirm('确认删除？该场次无预约记录'))alert('已删除')">删除</button>
+                </td>
+              </tr>
+              <tr>
+                <td>102</td><td>2026-04-12</td><td>14:00-16:00</td><td>50</td><td>50</td>
+                <td><span class="tag tag-success">开放</span></td>
+                <td>2026-03-15 10:05</td>
+                <td>
+                  <button class="btn btn-sm" onclick="document.getElementById('modal-edit').style.display='flex'">编辑</button>
+                  <button class="btn btn-sm btn-warning">下架</button>
+                  <button class="btn btn-sm" disabled>删除</button>
+                </td>
+              </tr>
+              <tr>
+                <td>103</td><td>2026-04-13</td><td>09:00-11:00</td><td>50</td><td>5</td>
+                <td><span class="tag tag-info">已下架</span></td>
+                <td>2026-03-15 10:08</td>
+                <td>
+                  <button class="btn btn-sm" onclick="document.getElementById('modal-edit').style.display='flex'">编辑</button>
+                  <button class="btn btn-sm btn-success">上架</button>
+                  <button class="btn btn-sm btn-danger" onclick="if(confirm('确认删除？'))alert('已删除')">删除</button>
+                </td>
+              </tr>
+              <tr>
+                <td>104</td><td>2026-04-13</td><td>14:00-16:00</td><td>50</td><td>0</td>
+                <td><span class="tag tag-success">开放</span></td>
+                <td>2026-03-15 10:10</td>
+                <td>
+                  <button class="btn btn-sm" onclick="document.getElementById('modal-edit').style.display='flex'">编辑</button>
+                  <button class="btn btn-sm btn-warning">下架</button>
+                  <button class="btn btn-sm btn-danger" onclick="if(confirm('确认删除？'))alert('已删除')">删除</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="pagination">
+            <button class="btn btn-sm">上一页</button>
+            <button class="btn btn-sm btn-primary">1</button>
+            <button class="btn btn-sm">2</button>
+            <button class="btn btn-sm">下一页</button>
+          </div>
+        </div>
+
+        <div class="card" style="padding:12px;background:#fdf6ec;border:1px solid #f5dab1">
+          <strong style="color:#b88230">场次业务约束</strong>
+          <ul style="margin:8px 0 0 24px;line-height:1.8;color:#606266">
+            <li>禁止新增过去时间的参观场次（前端禁选 + 后端拦截）</li>
+            <li>已预约人数 = 最大容纳人数 → 自动禁止访客预约</li>
+            <li>场次有预约记录时禁止删除（避免数据孤立）</li>
+            <li>下架后前台不展示该场次</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新增场次弹窗 -->
+  <div class="modal-mask" id="modal-add" style="display:none">
+    <div class="modal">
+      <div class="modal-title">新增参观场次</div>
+      <div class="form-item">
+        <label>参观日期</label>
+        <input type="date" value="2026-04-14">
+        <span class="text-muted" style="margin-left:8px;font-size:12px">不可选过去日期</span>
+      </div>
+      <div class="form-item">
+        <label>时段</label>
+        <input type="text" placeholder="如 09:00-11:00" value="09:00-11:00">
+      </div>
+      <div class="form-item">
+        <label>最大容纳人数</label>
+        <input type="number" value="50">
+      </div>
+      <div class="form-item">
+        <label>状态</label>
+        <select style="width:280px">
+          <option>开放</option>
+          <option>下架</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="document.getElementById('modal-add').style.display='none'">取消</button>
+        <button class="btn btn-primary" onclick="document.getElementById('modal-add').style.display='none';alert('保存成功')">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 编辑场次弹窗 -->
+  <div class="modal-mask" id="modal-edit" style="display:none">
+    <div class="modal">
+      <div class="modal-title">编辑参观场次</div>
+      <div class="form-item">
+        <label>参观日期</label>
+        <input type="date" value="2026-04-12">
+      </div>
+      <div class="form-item">
+        <label>时段</label>
+        <input type="text" value="09:00-11:00">
+      </div>
+      <div class="form-item">
+        <label>最大容纳人数</label>
+        <input type="number" value="50">
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="document.getElementById('modal-edit').style.display='none'">取消</button>
+        <button class="btn btn-primary" onclick="document.getElementById('modal-edit').style.display='none';alert('保存成功')">保存</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
