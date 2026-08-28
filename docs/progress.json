@@ -55,7 +55,9 @@
         {
           "id": 1,
           "name": "用户认证模块（访客注册登录、JWT、管理员登录）",
-          "status": "pending"
+          "status": "completed",
+          "completedAt": "2026-08-28",
+          "summary": "RegisterDTO/LoginDTO/ChangePasswordDTO + LoginVO/ProfileVO；AuthService 双表统一登录（访客→管理员）；AuthController 4 端点；12 项 HTTP 实测全部通过（含 40001/40010/40011/40013/40101 异常分支）；已合入 develop（77fba05）"
         },
         {
           "id": 2,
