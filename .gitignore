@@ -30,6 +30,9 @@ frontend/yarn-error.log*
 milvus/
 !milvus/.gitkeep
 
+# ============== 本地资料（用户要求不上传） ==============
+docs/产品原型/
+
 # ============== 环境/密钥 ==============
 # 真实密码/密钥配置只存本地，禁止上传（模板见同名 .example 文件）
 backend/src/main/resources/application-dev.yml
