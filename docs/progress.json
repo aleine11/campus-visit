@@ -3,7 +3,7 @@
   "school": "哈尔滨剑桥学院",
   "college": "智能科学与工程学院",
   "startTime": "2026-08-26T22:50:00",
-  "lastUpdate": "2026-08-28T23:59:00",
+  "lastUpdate": "2026-08-29T00:45:00",
   "currentStage": "2-in-progress",
   "stages": {
     "stage1_pre": {
@@ -69,7 +69,9 @@
         {
           "id": 3,
           "name": "参观场次模块",
-          "status": "pending"
+          "status": "completed",
+          "completedAt": "2026-08-29",
+          "summary": "前台 3 接口（可预约分页自动过滤过期/下架、最新N条、详情）+ 后台 6 接口（分页/新增/编辑/上架/下架/删除，@RequiresRole(admin)）；三大业务约束全验证：过去日期拦截 40001、缩容保护 40022、删除保护 40022；22 项 HTTP 实测全部通过；已合入 develop 和 main"
         },
         {
           "id": 4,
