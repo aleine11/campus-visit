@@ -3,7 +3,7 @@
   "school": "哈尔滨剑桥学院",
   "college": "智能科学与工程学院",
   "startTime": "2026-08-26T22:50:00",
-  "lastUpdate": "2026-08-29T00:45:00",
+  "lastUpdate": "2026-08-29T01:10:00",
   "currentStage": "2-in-progress",
   "stages": {
     "stage1_pre": {
@@ -76,7 +76,9 @@
         {
           "id": 4,
           "name": "访客预约模块（提交、查询、取消）",
-          "status": "pending"
+          "status": "completed",
+          "completedAt": "2026-08-29",
+          "summary": "4 接口（提交/我的预约/详情/取消，全部 @RequiresLogin）；核心机制全验证：乐观锁扣名额（version+名额双条件 SQL）、事务回滚零脏数据、重复预约 40020、名额不足 40021、越权 40301、取消释放名额、重复取消 40022；25 项 HTTP 实测全部通过"
         },
         {
           "id": 5,
