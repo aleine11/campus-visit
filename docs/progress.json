@@ -3,7 +3,7 @@
   "school": "哈尔滨剑桥学院",
   "college": "智能科学与工程学院",
   "startTime": "2026-08-26T22:50:00",
-  "lastUpdate": "2026-08-27T10:00:00",
+  "lastUpdate": "2026-08-28T23:59:00",
   "currentStage": "2-in-progress",
   "stages": {
     "stage1_pre": {
@@ -62,7 +62,9 @@
         {
           "id": 2,
           "name": "校园公告模块",
-          "status": "pending"
+          "status": "completed",
+          "completedAt": "2026-08-28",
+          "summary": "前台 3 接口（分页列表/最新N条/详情带上一篇下一篇，全部公开）+ 后台 6 接口（分页模糊搜索/新增/编辑/发布/下架/逻辑删除，@RequiresRole(admin)）；15 项 HTTP 实测全部通过；已合入 develop 和 main（a8379c1）"
         },
         {
           "id": 3,
