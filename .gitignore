@@ -19,6 +19,15 @@ backend/logs/
 # BGE 模型文件（太大不进版本库，本地下载）
 backend/models/
 
+# DJL 原生库缓存（运行时自动生成）
+.djl-cache/
+
+# 上传的知识库文档物理文件（用户数据不进库）
+backend/uploads/
+
+# 本地测试临时文件
+backend/tmp/
+
 # ============== Node/前端 ==============
 frontend/node_modules/
 frontend/dist/
@@ -29,6 +38,7 @@ frontend/yarn-error.log*
 # ============== Milvus ==============
 milvus/
 !milvus/.gitkeep
+docker/volumes/
 
 # ============== 本地资料（用户要求不上传） ==============
 docs/产品原型/

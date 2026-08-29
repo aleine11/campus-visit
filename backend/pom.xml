@@ -155,6 +155,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- ONNX Runtime：加载 BGE 模型的 ONNX 格式（比 TorchScript 对 Java 更友好） -->
+        <dependency>
+            <groupId>com.microsoft.onnxruntime</groupId>
+            <artifactId>onnxruntime</artifactId>
+            <version>1.16.3</version>
+        </dependency>
+
         <!-- 测试支持 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -46,10 +46,12 @@ campus:
     embedding-model: "text-embedding-v2"  # 备用云端嵌入模型，BGE 本地跑挂掉时降级使用
     timeout: 30000  # 大模型调用超时 30 秒
 
-  # BGE-small-zh 嵌入模型配置（本地）
+  # BGE 中文嵌入模型配置（本地 ONNX 格式，模型文件需手动下载到该目录）
+  # ⚠️ 维度事实修正：bge-small-zh-v1.5 实际输出 512 维；768 维对应 bge-base-zh-v1.5。
+  #    Milvus 集合按设计文档定为 768 维，因此本地模型采用 bge-base-zh-v1.5（下载教程见知识点手册）
   bge:
-    model-path: "./models/bge-small-zh-v1.5"  # 本地模型路径
-    vector-dim: 768  # BGE-small-zh 输出向量维度
+    model-path: "./models/bge-base-zh-v1.5"  # 本地模型目录（含 model.onnx + tokenizer.json）
+    vector-dim: 768  # 输出向量维度（与 Milvus 集合、设计文档一致）
 
   # Milvus 向量数据库配置
   milvus:

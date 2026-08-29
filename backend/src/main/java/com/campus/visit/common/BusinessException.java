@@ -19,6 +19,12 @@ public class BusinessException extends RuntimeException {
         this.code = resultCode.getCode();
     }
 
+    /** 带自定义消息的构造（错误码取自枚举，消息可附加细节，如"文档解析失败: xxx"） */
+    public BusinessException(ResultCode resultCode, String message) {
+        super(message);
+        this.code = resultCode.getCode();
+    }
+
     public BusinessException(Integer code, String message) {
         super(message);
         this.code = code;
