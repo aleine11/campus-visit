@@ -4,6 +4,7 @@ import ai.djl.huggingface.tokenizers.Encoding;
 import ai.djl.huggingface.tokenizers.HuggingFaceTokenizer;
 import ai.onnxruntime.OnnxTensor;
 import ai.onnxruntime.OrtEnvironment;
+import ai.onnxruntime.OrtException;
 import ai.onnxruntime.OrtSession;
 import com.campus.visit.common.BusinessException;
 import com.campus.visit.common.ResultCode;
@@ -23,13 +24,13 @@ import java.util.Map;
 /**
  * BGE 中文嵌入模型服务（本地 ONNX 推理）
  *
- * 模型：bge-base-zh-v1.5（768 维，与设计文档/Milvus 集合一致；
- *       设计文档笔误写 small 版——small 实际 512 维，故用 base 版）
+ * -base-zh-v1.5（768 维，与设计文档/Milvus 集合一致；
+ * 设计文档笔误写 small 版——small 实际 512 维，故用 base 版）
  *
- * 工作原理（三步）：
- *   1. HuggingFaceTokenizer 把文本切成 token 序列（input_ids + attention_mask）
- *   2. ONNX Runtime 跑 model.onnx，输出每个 token 的隐藏向量 [seq, 768]
- *   3. CLS 池化（取第一个 token 的向量，BGE 官方 pooling 方式）+ L2 归一化
+ * 原理（三步）：
+ * 1. HuggingFaceTokenizer 把文本切成 token 序列（input_ids + attention_mask）
+ * 2. ONNX Runtime 跑 model.onnx，输出每个 token 的隐藏向量 [seq, 768]
+ * 3. CLS 池化（取第一个 token 的向量，BGE 官方 pooling 方式）+ L2 归一化
  *
  * 模型缺失时的降级策略：允许应用正常启动（传统业务不依赖它），
  * 调用 embed 时抛 40040 并提示下载教程——避免"模型没下就把整个后端搞挂"。
@@ -104,15 +105,15 @@ public class EmbeddingService {
             long[] attentionMask = encoding.getAttentionMask();
             long[] tokenTypeIds = encoding.getTypeIds();
             if (tokenTypeIds == null || tokenTypeIds.length != inputIds.length) {
-                tokenTypeIds = new long[inputIds.length];   // 兜底：全 0
+                tokenTypeIds = new long[inputIds.length]; // 兜底：全 0
             }
 
             // 2. 构造输入张量 [1, seqLen]
             Map<String, OnnxTensor> inputs = new HashMap<>();
-            inputs.put("input_ids", OnnxTensor.createTensor(ortEnv, new long[][]{inputIds}));
-            inputs.put("attention_mask", OnnxTensor.createTensor(ortEnv, new long[][]{attentionMask}));
+            inputs.put("input_ids", OnnxTensor.createTensor(ortEnv, new long[][] { inputIds }));
+            inputs.put("attention_mask", OnnxTensor.createTensor(ortEnv, new long[][] { attentionMask }));
             if (ortSession.getInputNames().contains("token_type_ids")) {
-                inputs.put("token_type_ids", OnnxTensor.createTensor(ortEnv, new long[][]{tokenTypeIds}));
+                inputs.put("token_type_ids", OnnxTensor.createTensor(ortEnv, new long[][] { tokenTypeIds }));
             }
 
             // 3. 前向推理 → [1, seqLen, 768]
@@ -148,7 +149,11 @@ public class EmbeddingService {
     @PreDestroy
     public void destroy() {
         if (ortSession != null) {
-            ortSession.close();
+            try {
+                ortSession.close();
+            } catch (OrtException e) {
+                log.warn("OrtSession 关闭异常: {}", e.getMessage());
+            }
         }
         if (tokenizer != null) {
             tokenizer.close();

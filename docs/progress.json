@@ -3,7 +3,7 @@
   "school": "哈尔滨剑桥学院",
   "college": "智能科学与工程学院",
   "startTime": "2026-08-26T22:50:00",
-  "lastUpdate": "2026-08-29T22:25:00",
+  "lastUpdate": "2026-08-29T23:55:00",
   "currentStage": "2-in-progress",
   "stages": {
     "stage1_pre": {
@@ -104,12 +104,16 @@
         {
           "id": 8,
           "name": "RAG 知识库文档管理（上传、解析、分块、向量化、删除同步）",
-          "status": "pending"
+          "status": "completed",
+          "completedAt": "2026-08-29",
+          "summary": "4 接口（分页/上传/删除/重解析，@RequiresRole(admin)）；技术栈：ONNX Runtime 本地加载 bge-base-zh-v1.5（768 维，修正设计文档 small=512 维笔误）+ Milvus SDK 2.3.4 三容器集群 + PDFBox/POI 解析 + 500字/100重叠滑动分块 + @Async 单线程池异步解析流水线；MySQL+Milvus 双写一致性（先 Milvus 后 MySQL）；实测：TXT/PDF/DOCX 三格式上传解析全部 status=1 共 5 向量块入库、exe 拦截 40030、删除 total 3→2、reparse 闭环、无 token 40101；修复 BusinessException(ResultCode,String) 构造器缺失 + Milvus 2.3.4 Field 两参签名；已合入 develop 和 main（a9bbdc6）"
         },
         {
           "id": 9,
           "name": "AI 智能咨询问答模块（检索、提示词、大模型调用、记录）",
-          "status": "pending"
+          "status": "completed",
+          "completedAt": "2026-08-29",
+          "summary": "5 接口（提问/会话分页/消息分页/新建会话/清空会话，全部 @RequiresLogin）；RAG 读取链路全通：BGE 768 维向量化 → Milvus 检索 top3 → 防幻觉闸门（top1<0.5 回固定话术）→ qwen-plus 生成 → 会话-消息落库（含引用三元组+token 数）；越权三连校验（读/删/续会话均 40301）；真实 API-Key 回归 10 项全过：命中 3 连（参观时间→每天9:00-17:00）、未命中 2 连拒（无关分数带 0.28 与阈值 0.5 分界清晰）、空问题 40001、无 token 40101、越权 40301×2、清空 total 8→7；修复 Milvus IDScore 解析（javap 反编译确认 fieldValues 结构）+ 补 Generation @Bean 配置；关键排查经验：测试客户端中文 Body 必须转 UTF-8 字节，否则乱码向量误判未命中（详见知识点.md 14.5）"
         },
         {
           "id": 10,

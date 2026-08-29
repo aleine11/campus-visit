@@ -9,12 +9,16 @@ import io.milvus.param.collection.HasCollectionParam;
 import io.milvus.param.collection.LoadCollectionParam;
 import io.milvus.param.dml.DeleteParam;
 import io.milvus.param.dml.InsertParam;
+import io.milvus.param.dml.SearchParam;
 import io.milvus.param.index.CreateIndexParam;
+import io.milvus.response.SearchResultsWrapper;
+import io.milvus.grpc.SearchResults;
 import io.milvus.param.IndexType;
 import io.milvus.param.MetricType;
 import io.milvus.grpc.DataType;
 import com.campus.visit.common.BusinessException;
 import com.campus.visit.common.ResultCode;
+import com.google.gson.JsonObject;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -176,5 +180,95 @@ public class MilvusService {
                         log.error("Milvus {}失败: status={}, msg={}", action, result.getStatus(), result.getMessage());
                         throw new BusinessException(ResultCode.MILVUS_ERROR, action + "失败: " + result.getMessage());
                 }
+        }
+
+        /* ==================== 检索（模块 9 读取链路） ==================== */
+
+        /**
+         * 语义检索 top-K（对标 architecture.md 9.1 第 4 步）
+         *
+         * @param questionVector 问题向量（BGE 归一化后）
+         * @param topK           取前 K 个最相似片段
+         * @return 按相似度降序的片段列表（IP 分数 = 余弦相似度，范围 [-1, 1]）
+         */
+        public List<KnowledgeChunk> searchTopK(float[] questionVector, int topK) {
+                ensureCollection();
+
+                List<Float> vec = new ArrayList<>(questionVector.length);
+                for (float v : questionVector) {
+                        vec.add(v);
+                }
+
+                SearchParam searchParam = SearchParam.newBuilder()
+                                .withCollectionName(collectionName)
+                                .withMetricType(MetricType.IP)
+                                .withVectorFieldName("embedding")
+                                .withTopK(topK)
+                                .withVectors(List.of(vec))
+                                // 布尔表达式过滤：只检索正常解析完成的文档向量（防御：文档被删但向量未清干净时不误召回）
+                                .withExpr("doc_id > 0")
+                                .addOutField("doc_id")
+                                .addOutField("chunk_id")
+                                .addOutField("content")
+                                .addOutField("file_name")
+                                .withRoundDecimal(-1)
+                                .build();
+
+                R<SearchResults> response = milvusClient.search(searchParam);
+                check(response, "向量检索");
+
+                SearchResultsWrapper wrapper = new SearchResultsWrapper(response.getData().getResults());
+                List<KnowledgeChunk> chunks = new ArrayList<>();
+                // 只有一个查询向量，取第 0 组结果
+                List<SearchResultsWrapper.IDScore> scores = wrapper.getIDScore(0);
+                for (SearchResultsWrapper.IDScore idScore : scores) {
+                        KnowledgeChunk chunk = new KnowledgeChunk();
+                        chunk.setDocId(toLong(idScore.get("doc_id")));
+                        chunk.setChunkId(toLong(idScore.get("chunk_id")));
+                        chunk.setContent(toStr(idScore.get("content")));
+                        chunk.setFileName(toStr(idScore.get("file_name")));
+                        chunk.setScore(idScore.getScore());
+                        chunks.add(chunk);
+                }
+                log.info("Milvus 检索完成: topK={}, 命中={} 条, 最高分={}", topK, chunks.size(),
+                                chunks.isEmpty() ? 0 : chunks.get(0).getScore());
+                return chunks;
+        }
+
+        /** SDK 返回的字段值类型不确定（JsonPrimitive/Number/String），统一转 Long */
+        private Long toLong(Object value) {
+                if (value == null) {
+                        return null;
+                }
+                if (value instanceof com.google.gson.JsonPrimitive p) {
+                        return p.getAsLong();
+                }
+                if (value instanceof Number n) {
+                        return n.longValue();
+                }
+                return Long.parseLong(value.toString());
+        }
+
+        /** SDK 返回的字段值类型不确定，统一转 String */
+        private String toStr(Object value) {
+                if (value == null) {
+                        return null;
+                }
+                if (value instanceof com.google.gson.JsonPrimitive p) {
+                        return p.getAsString();
+                }
+                return value.toString();
+        }
+
+        /**
+         * 检索结果片段（Milvus 一行 → 业务对象）
+         */
+        @lombok.Data
+        public static class KnowledgeChunk {
+                private Long docId;
+                private Long chunkId;
+                private String content;
+                private String fileName;
+                private Float score;
         }
 }
