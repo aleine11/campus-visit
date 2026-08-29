@@ -41,4 +41,18 @@ public class ReservationListVO {
 
     /** 提交时间 */
     private LocalDateTime submitTime;
+
+    /* ===== 管理员分页（5.1）追加字段，访客接口（4.2）不填 ===== */
+
+    /** 手机号 */
+    private String phone;
+
+    /** 参观事由 */
+    private String reason;
+
+    /** 审核人姓名（未审核为 null） */
+    private String auditAdminName;
+
+    /** 审核时间 */
+    private LocalDateTime auditTime;
 }

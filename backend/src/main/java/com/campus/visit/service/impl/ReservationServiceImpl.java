@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.visit.common.BusinessException;
 import com.campus.visit.common.ResultCode;
+import com.campus.visit.dto.reservation.ReservationAuditDTO;
 import com.campus.visit.dto.reservation.ReservationSubmitDTO;
 import com.campus.visit.entity.AdminUser;
 import com.campus.visit.entity.VisitReservation;
@@ -177,32 +178,8 @@ public class ReservationServiceImpl implements ReservationService {
         if (!order.getVisitorId().equals(visitorId)) {
             throw new BusinessException(ResultCode.FORBIDDEN); // 40301 非本人订单
         }
-
-        // 补充场次信息和审核人姓名
-        VisitSession session = sessionMapper.selectById(order.getSessionId());
-        String auditAdminName = null;
-        if (order.getAuditAdminId() != null) {
-            AdminUser admin = adminUserMapper.selectById(order.getAuditAdminId());
-            auditAdminName = admin != null ? admin.getRealName() : null;
-        }
-
-        return ReservationDetailVO.builder()
-                .id(order.getId())
-                .sessionId(order.getSessionId())
-                .visitDate(session != null ? session.getVisitDate() : null)
-                .timeSlot(session != null ? session.getTimeSlot() : null)
-                .realName(order.getRealName())
-                .phone(order.getPhone())
-                .peopleCount(order.getPeopleCount())
-                .reason(order.getReason())
-                .status(order.getStatus())
-                .statusText(statusText(order.getStatus()))
-                .submitTime(order.getSubmitTime())
-                .auditAdminName(auditAdminName)
-                .auditTime(order.getAuditTime())
-                .rejectReason(order.getRejectReason())
-                .cancelTime(order.getCancelTime())
-                .build();
+        // 详情构建逻辑与管理员端共用（见 buildDetailVO）
+        return buildDetailVO(order);
     }
 
     /**
@@ -251,7 +228,188 @@ public class ReservationServiceImpl implements ReservationService {
         log.info("预约已取消: orderId={}, 回滚名额={}", id, order.getPeopleCount());
     }
 
+    /* ==================== 管理员端（模块 5） ==================== */
+
+    /**
+     * 5.1 预约订单分页（管理员看全部）
+     *
+     * 动态条件：姓名模糊 / 状态 / 提交时间范围，全部可空
+     * 与 myList 的区别：不按 visitor_id 过滤（能看所有人的订单）
+     */
+    @Override
+    public Page<ReservationListVO> pageForAdmin(String realName, Integer status,
+            LocalDateTime startDate, LocalDateTime endDate,
+            Integer current, Integer size) {
+        int page = (current == null || current < 1) ? 1 : current;
+        int rows = (size == null || size < 1) ? 10 : size;
+
+        Page<VisitReservation> p = new Page<>(page, rows);
+        Page<VisitReservation> result = reservationMapper.selectPage(p,
+                new LambdaQueryWrapper<VisitReservation>()
+                        // 姓名模糊：like 两侧 %
+                        .like(realName != null && !realName.isBlank(),
+                                VisitReservation::getRealName, realName)
+                        .eq(status != null, VisitReservation::getStatus, status)
+                        // 时间范围：>= 起始，<= 截止
+                        .ge(startDate != null, VisitReservation::getSubmitTime, startDate)
+                        .le(endDate != null, VisitReservation::getSubmitTime, endDate)
+                        .orderByDesc(VisitReservation::getSubmitTime));
+
+        // 管理员列表比访客列表多返回 phone/reason/审核人/审核时间 → toBuilder 追加
+        return toAdminVoPage(result);
+    }
+
+    /**
+     * 5.2 订单详情（管理员视角）
+     *
+     * 与访客 detail 的唯一区别：不做归属校验（管理员可以看任何订单）
+     * 抽出公共构建逻辑 buildDetailVO，两个入口共用
+     */
+    @Override
+    public ReservationDetailVO detailForAdmin(Long id) {
+        VisitReservation order = reservationMapper.selectById(id);
+        if (order == null) {
+            throw new BusinessException(ResultCode.RESERVATION_NOT_FOUND); // 40401
+        }
+        return buildDetailVO(order);
+    }
+
+    /**
+     * 5.3 审核预约（通过 / 驳回）
+     *
+     * 执行流程：
+     * 1. 订单存在性（40401）
+     * 2. 状态机校验：仅待审核可审（40022）——已审核不可重复审核（文档硬约束）
+     * 3. 驳回时：rejectReason 必填（40001，条件必填在 Service 校验）
+     * 4. 更新订单状态 + 审核人 + 审核时间（+ 驳回原因）
+     * 5. 驳回时：乐观锁回滚名额（事务保证与第 4 步同生共死）
+     *
+     * ⭐ 审核对称性（对标文档 5.3 业务逻辑）：
+     * 通过 → 名额不动（提交预约时已扣，审核通过只是"确认放行"）
+     * 驳回 → 名额回滚（访客没来成，名额还给其他人）
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void audit(Long id, ReservationAuditDTO dto) {
+        // 1. 订单存在性
+        VisitReservation order = reservationMapper.selectById(id);
+        if (order == null) {
+            throw new BusinessException(ResultCode.RESERVATION_NOT_FOUND); // 40401
+        }
+
+        // 2. 状态机校验：仅待审核(status=0)可审核
+        if (order.getStatus() != STATUS_PENDING) {
+            throw new BusinessException(ResultCode.RESERVATION_STATUS_INVALID); // 40022
+        }
+
+        // 3. 驳回必填原因（条件必填，注解做不到，Service 判断）
+        if (!dto.getPass() && (dto.getRejectReason() == null || dto.getRejectReason().isBlank())) {
+            throw new BusinessException(ResultCode.PARAM_INVALID.getCode(), "驳回时必须填写驳回原因");
+        }
+
+        // 4. 更新订单：状态 + 审核人 + 审核时间（+ 驳回原因）
+        Long adminId = UserContext.get().getUserId(); // 当前登录管理员
+        order.setStatus(dto.getPass() ? STATUS_PASSED : STATUS_REJECTED);
+        order.setAuditAdminId(adminId);
+        order.setAuditTime(LocalDateTime.now());
+        if (!dto.getPass()) {
+            order.setRejectReason(dto.getRejectReason().trim());
+        }
+        int rows = reservationMapper.updateById(order);
+        if (rows == 0) {
+            throw new BusinessException(ResultCode.RESERVATION_STATUS_INVALID);
+        }
+
+        // 5. 驳回 → 回滚名额（乐观锁；通过则不动名额）
+        if (!dto.getPass()) {
+            com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<VisitSession> rollbackWrapper = new com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<VisitSession>()
+                    .setSql("used_people = used_people - " + order.getPeopleCount())
+                    .eq(VisitSession::getId, order.getSessionId());
+            int rollbackRows = sessionMapper.update(null, rollbackWrapper);
+            if (rollbackRows == 0) {
+                // 回滚失败（场次被并发改动到异常状态）→ 抛异常 → 订单状态更新一并回滚
+                throw new BusinessException(ResultCode.SERVER_ERROR);
+            }
+        }
+
+        log.info("预约已审核: orderId={}, pass={}, admin={}, people={}",
+                id, dto.getPass(), adminId, order.getPeopleCount());
+    }
+
     /* ==================== 私有工具方法 ==================== */
+
+    /**
+     * 构建订单详情 VO（公共逻辑，访客 detail / 管理员 detailForAdmin 共用）
+     * 补充：场次日期时段 + 审核人姓名（关联 admin_user 表查 real_name）
+     */
+    private ReservationDetailVO buildDetailVO(VisitReservation order) {
+        VisitSession session = sessionMapper.selectById(order.getSessionId());
+        String auditAdminName = null;
+        if (order.getAuditAdminId() != null) {
+            AdminUser admin = adminUserMapper.selectById(order.getAuditAdminId());
+            auditAdminName = admin != null ? admin.getRealName() : null;
+        }
+
+        return ReservationDetailVO.builder()
+                .id(order.getId())
+                .sessionId(order.getSessionId())
+                .visitDate(session != null ? session.getVisitDate() : null)
+                .timeSlot(session != null ? session.getTimeSlot() : null)
+                .realName(order.getRealName())
+                .phone(order.getPhone())
+                .peopleCount(order.getPeopleCount())
+                .reason(order.getReason())
+                .status(order.getStatus())
+                .statusText(statusText(order.getStatus()))
+                .submitTime(order.getSubmitTime())
+                .auditAdminName(auditAdminName)
+                .auditTime(order.getAuditTime())
+                .rejectReason(order.getRejectReason())
+                .cancelTime(order.getCancelTime())
+                .build();
+    }
+
+    /** 管理员列表 VO（在访客版基础上追加 phone/reason/审核人姓名/审核时间） */
+    private Page<ReservationListVO> toAdminVoPage(Page<VisitReservation> result) {
+        // 批量查场次（防 N+1）+ 批量查审核人姓名（防 N+1）
+        List<Long> sessionIds = result.getRecords().stream()
+                .map(VisitReservation::getSessionId).distinct().toList();
+        java.util.Map<Long, VisitSession> sessionMap = sessionIds.isEmpty()
+                ? java.util.Collections.emptyMap()
+                : sessionMapper.selectBatchIds(sessionIds).stream()
+                        .collect(java.util.stream.Collectors.toMap(VisitSession::getId, s -> s));
+
+        // 审核人 ID → 批量查管理员
+        List<Long> adminIds = result.getRecords().stream()
+                .map(VisitReservation::getAuditAdminId)
+                .filter(java.util.Objects::nonNull).distinct().toList();
+        java.util.Map<Long, AdminUser> adminMap = adminIds.isEmpty()
+                ? java.util.Collections.emptyMap()
+                : adminUserMapper.selectBatchIds(adminIds).stream()
+                        .collect(java.util.stream.Collectors.toMap(AdminUser::getId, a -> a));
+
+        Page<ReservationListVO> voPage = new Page<>(result.getCurrent(), result.getSize(), result.getTotal());
+        voPage.setRecords(result.getRecords().stream().map(o -> {
+            VisitSession s = sessionMap.get(o.getSessionId());
+            AdminUser a = o.getAuditAdminId() != null ? adminMap.get(o.getAuditAdminId()) : null;
+            return ReservationListVO.builder()
+                    .id(o.getId())
+                    .sessionId(o.getSessionId())
+                    .visitDate(s != null ? s.getVisitDate() : null)
+                    .timeSlot(s != null ? s.getTimeSlot() : null)
+                    .peopleCount(o.getPeopleCount())
+                    .status(o.getStatus())
+                    .statusText(statusText(o.getStatus()))
+                    .submitTime(o.getSubmitTime())
+                    // 管理员版追加字段
+                    .phone(o.getPhone())
+                    .reason(o.getReason())
+                    .auditAdminName(a != null ? a.getRealName() : null)
+                    .auditTime(o.getAuditTime())
+                    .build();
+        }).toList());
+        return voPage;
+    }
 
     /** 状态码 → 中文（状态字典 D4） */
     private String statusText(Integer status) {
