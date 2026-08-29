@@ -1,0 +1,80 @@
+# ============================================================
+# Milvus 2.3.4 单机版（standalone）容器编排
+# 用途：本项目的向量数据库（存储知识库文档的 768 维向量）
+#
+# 使用方法（在 campus-visit 目录下）：
+#   启动：docker compose up -d
+#   停止：docker compose stop        （容器保留，下次秒起）
+#   彻底删除：docker compose down    （数据卷还在，数据不丢）
+#   连数据删掉：docker compose down -v（慎用！知识库向量全没）
+#
+# 组件说明（为什么是 3 个容器）：
+#   etcd     —— 元数据存储（集合结构、索引信息这些"目录"）
+#   minio    —— 对象存储（向量数据文件落盘的地方）
+#   standalone —— Milvus 主服务，对外提供 19530 端口
+#
+# 端口：
+#   19530 —— Milvus SDK 连接端口（Java 后端用这个）
+#   9091  —— 健康检查/指标页面
+#   9000/9001 —— MinIO（一般用不到，不用管）
+# ============================================================
+
+services:
+  etcd:
+    container_name: milvus-etcd
+    image: quay.io/coreos/etcd:v3.5.5
+    environment:
+      - ETCD_AUTO_COMPACTION_MODE=revision
+      - ETCD_AUTO_COMPACTION_RETENTION=1000
+      - ETCD_QUOTA_BACKEND_BYTES=4294967296
+      - ETCD_SNAPSHOT_COUNT=50000
+    volumes:
+      - ./docker/volumes/etcd:/etcd
+    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  minio:
+    container_name: milvus-minio
+    image: minio/minio:RELEASE.2023-03-20T20-16-18Z
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    ports:
+      - "9001:9001"
+      - "9000:9000"
+    volumes:
+      - ./docker/volumes/minio:/minio_data
+    command: minio server /minio_data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  standalone:
+    container_name: milvus-standalone
+    image: milvusdb/milvus:v2.3.4
+    command: ["milvus", "run", "standalone"]
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000
+    volumes:
+      - ./docker/volumes/milvus:/var/lib/milvus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
+      interval: 30s
+      start_period: 90s
+      timeout: 20s
+      retries: 3
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    depends_on:
+      - "etcd"
+      - "minio"
