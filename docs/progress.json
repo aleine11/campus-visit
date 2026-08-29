@@ -3,7 +3,7 @@
   "school": "哈尔滨剑桥学院",
   "college": "智能科学与工程学院",
   "startTime": "2026-08-26T22:50:00",
-  "lastUpdate": "2026-08-29T22:30:00",
+  "lastUpdate": "2026-08-29T22:25:00",
   "currentStage": "2-in-progress",
   "stages": {
     "stage1_pre": {
@@ -97,7 +97,9 @@
         {
           "id": 7,
           "name": "管理员账号管理模块",
-          "status": "pending"
+          "status": "completed",
+          "completedAt": "2026-08-29",
+          "summary": "3 接口（管理员分页/新增/重置密码，@RequiresRole(admin)+superOnly 二级门禁）；权限分层漏斗实测：访客<管理员<超管三级矩阵；双表查重防登录遮蔽；超管不可复制原则（is_super 固定 0）；密码重置闭环验证；14 项 HTTP 实测全部通过"
         },
         {
           "id": 8,
