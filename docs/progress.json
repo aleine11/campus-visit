@@ -3,7 +3,7 @@
   "school": "哈尔滨剑桥学院",
   "college": "智能科学与工程学院",
   "startTime": "2026-08-26T22:50:00",
-  "lastUpdate": "2026-08-29T23:55:00",
+  "lastUpdate": "2026-08-30T21:10:00",
   "currentStage": "2-in-progress",
   "stages": {
     "stage1_pre": {
@@ -118,7 +118,9 @@
         {
           "id": 10,
           "name": "问答日志统计模块",
-          "status": "pending"
+          "status": "completed",
+          "completedAt": "2026-08-30",
+          "summary": "3 接口（看板/问答日志分页/高频问题统计，@RequiresRole(admin)，全部只读）；看板 6 块数据：今日预约/待审核/访客总数/问答总次数（口径=assistant消息数）/近7天趋势（GROUP BY+应用层补零）/最近5条待审（复用模块5 pageForAdmin 零重复代码）；日志分页：自定义三表关联 SQL（assistant 主表 + join visitor_user 取姓名 + 同表子查询 MAX(id) 取同会话上一条 user 消息当问题 + join knowledge_doc 取引用名），MP 注解 <script> 动态筛选 + IPage 自动分页；热词统计：零依赖字符切分 + CJK 过滤 + 停用字（首轮实测标点霸榜？=26 次已修复）；11 项实测全过（权限 40101/40301、看板与日志 total=10 交叉一致、4 种筛选、days 边界 0/1/365/366、翻页倒序）"
         },
         {
           "id": 11,
