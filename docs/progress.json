@@ -3,7 +3,7 @@
   "school": "哈尔滨剑桥学院",
   "college": "智能科学与工程学院",
   "startTime": "2026-08-26T22:50:00",
-  "lastUpdate": "2026-08-30T21:10:00",
+  "lastUpdate": "2026-08-30T22:00:00",
   "currentStage": "2-in-progress",
   "stages": {
     "stage1_pre": {
@@ -125,7 +125,9 @@
         {
           "id": 11,
           "name": "前端访客前台页面",
-          "status": "pending"
+          "status": "completed",
+          "completedAt": "2026-08-30",
+          "summary": "12 个访客页面（登录/注册/首页/公告列表+详情/场次列表/预约提交/我的预约/预约详情/AI历史会话/个人中心/403）+ 4 层基础设施（utils 三件套/Pinia user store/api 层 6 文件/全量路由+守卫）+ 公共组件 4 个（AiFloatChat 悬浮窗/AiTyping 打字机/EmptyState/PaginationBar）；浏览器全流程实测通过：登录态保持、路由守卫跳转（未登录→login 带 redirect、角色不符→403）、预约流程、AI 咨询（打字机效果+引用来源+防幻觉提示均正常）；修复 request.js 双 bug（res.msg→res.message、401→40101）与 AI 打字机响应式 bug（push 后取 reactive 代理再改）"
         },
         {
           "id": 12,
