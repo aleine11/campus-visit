@@ -109,7 +109,7 @@ const routes = [
     ],
   },
 
-  // ===== 管理员后台（模块 12 实现页面，路由先占位对标设计文档） =====
+  // ===== 管理员后台（模块 12，对标 frontend-prototype.md A1-A8） =====
   {
     path: '/admin',
     component: () => import('@/views/admin/Layout.vue'),
@@ -119,7 +119,50 @@ const routes = [
         path: '',
         name: 'AdminHome',
         component: () => import('@/views/admin/Home.vue'),
-        meta: { title: '管理后台', requiresAuth: true, role: 'admin' },
+        meta: { title: '后台首页', requiresAuth: true, role: 'admin' },
+      },
+      {
+        path: 'session',
+        name: 'AdminSession',
+        component: () => import('@/views/admin/SessionManage.vue'),
+        meta: { title: '参观场次管理', requiresAuth: true, role: 'admin' },
+      },
+      {
+        path: 'reservation',
+        name: 'AdminReservation',
+        component: () => import('@/views/admin/ReservationAudit.vue'),
+        meta: { title: '预约订单审核', requiresAuth: true, role: 'admin' },
+      },
+      {
+        path: 'visitor',
+        name: 'AdminVisitor',
+        component: () => import('@/views/admin/VisitorManage.vue'),
+        meta: { title: '访客用户管理', requiresAuth: true, role: 'admin' },
+      },
+      {
+        path: 'notice',
+        name: 'AdminNotice',
+        component: () => import('@/views/admin/NoticeManage.vue'),
+        meta: { title: '校园公告管理', requiresAuth: true, role: 'admin' },
+      },
+      {
+        path: 'knowledge',
+        name: 'AdminKnowledge',
+        component: () => import('@/views/admin/KnowledgeManage.vue'),
+        meta: { title: 'RAG 知识库管理', requiresAuth: true, role: 'admin' },
+      },
+      {
+        path: 'chatlog',
+        name: 'AdminChatLog',
+        component: () => import('@/views/admin/ChatLogStats.vue'),
+        meta: { title: '问答日志统计', requiresAuth: true, role: 'admin' },
+      },
+      {
+        path: 'admin',
+        name: 'AdminAccount',
+        component: () => import('@/views/admin/AdminManage.vue'),
+        // isSuper：超管专属页（非超管在守卫里被送去 403；后端也有 superOnly 兜底）
+        meta: { title: '管理员账号', requiresAuth: true, role: 'admin', isSuper: true },
       },
     ],
   },
@@ -150,6 +193,11 @@ router.beforeEach((to) => {
 
   // ② 角色不匹配 → 403 页（访客进后台、管理员进访客专属页都算越权）
   if (to.meta.role && store.isLoggedIn && store.role !== to.meta.role) {
+    return { path: '/forbidden' }
+  }
+
+  // ②⁺ 超管专属页（meta.isSuper）：普通管理员访问 → 403（后端 superOnly 40301 双保险）
+  if (to.meta.isSuper && store.isLoggedIn && !store.isSuper) {
     return { path: '/forbidden' }
   }
 

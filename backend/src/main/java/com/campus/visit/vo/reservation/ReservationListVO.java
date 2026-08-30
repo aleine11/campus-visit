@@ -44,6 +44,9 @@ public class ReservationListVO {
 
     /* ===== 管理员分页（5.1）追加字段，访客接口（4.2）不填 ===== */
 
+    /** 访客姓名（订单提交时的快照，visit_reservation.real_name；模块 12 前端列表展示用） */
+    private String realName;
+
     /** 手机号 */
     private String phone;
 

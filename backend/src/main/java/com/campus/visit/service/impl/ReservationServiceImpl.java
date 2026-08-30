@@ -322,8 +322,11 @@ public class ReservationServiceImpl implements ReservationService {
 
         // 5. 驳回 → 回滚名额（乐观锁；通过则不动名额）
         if (!dto.getPass()) {
+            // ⭐ GREATEST 防负数保护：used_people 是 INT UNSIGNED 列，
+            // 正常流程"先扣后还"不会出负数，但若数据被手工调整过（脏数据），
+            // 0-3 这类运算在 MySQL 里会直接报错 500 → 用 GREATEST 兜底为 0
             com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<VisitSession> rollbackWrapper = new com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<VisitSession>()
-                    .setSql("used_people = used_people - " + order.getPeopleCount())
+                    .setSql("used_people = GREATEST(used_people - " + order.getPeopleCount() + ", 0)")
                     .eq(VisitSession::getId, order.getSessionId());
             int rollbackRows = sessionMapper.update(null, rollbackWrapper);
             if (rollbackRows == 0) {
@@ -402,6 +405,7 @@ public class ReservationServiceImpl implements ReservationService {
                     .statusText(statusText(o.getStatus()))
                     .submitTime(o.getSubmitTime())
                     // 管理员版追加字段
+                    .realName(o.getRealName())
                     .phone(o.getPhone())
                     .reason(o.getReason())
                     .auditAdminName(a != null ? a.getRealName() : null)

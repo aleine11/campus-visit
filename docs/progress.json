@@ -3,8 +3,8 @@
   "school": "哈尔滨剑桥学院",
   "college": "智能科学与工程学院",
   "startTime": "2026-08-26T22:50:00",
-  "lastUpdate": "2026-08-30T22:00:00",
-  "currentStage": "2-in-progress",
+  "lastUpdate": "2026-08-30T23:30:00",
+  "currentStage": "2-completed",
   "stages": {
     "stage1_pre": {
       "status": "completed",
@@ -44,7 +44,9 @@
       "summary": "四份设计文档与产品原型全部产出，等待用户确认进入 Stage2 代码开发"
     },
     "stage2": {
-      "status": "in-progress",
+      "status": "completed",
+      "completedAt": "2026-08-30",
+      "summary": "13 个模块（0~12）全部完成：后端 11 个模块 + 前端访客前台 + 前端管理员后台，全部经 HTTP/浏览器实测通过",
       "modules": [
         {
           "id": 0,
@@ -132,7 +134,9 @@
         {
           "id": 12,
           "name": "前端管理员后台页面",
-          "status": "pending"
+          "status": "completed",
+          "completedAt": "2026-08-30",
+          "summary": "9 个后台页面（Layout/看板/场次管理/预约审核/访客管理/公告管理/知识库管理/问答统计/管理员账号）+ api 层扩展 6 文件 + 路由守卫 isSuper 三重保险（菜单隐藏/守卫 403/后端 superOnly）；看板 ECharts 折线图、统计页 Top10 柱状图 + CSS 标签云；浏览器全流程实测通过：审核通过/驳回（空原因拦截+原因入库+名额回滚验证）、场次编辑/上下架/删除、访客冻结解冻、公告全状态闭环、知识库页渲染、访客强访后台被拦；修复 2 个 bug：后端驳回回滚名额 UNSIGNED 负数 500（GREATEST 防负）、前端 ECharts 隐藏 Tab 初始化 0 宽白板（tab-change 后渲染+resize）；后端连带修复 ReservationListVO 补 realName"
         }
       ]
     },
@@ -193,8 +197,8 @@
     },
     {
       "name": "Stage2 全部模块开发完成",
-      "date": null,
-      "status": "pending"
+      "date": "2026-08-30",
+      "status": "completed"
     },
     {
       "name": "Stage3 全部模块测试通过",
