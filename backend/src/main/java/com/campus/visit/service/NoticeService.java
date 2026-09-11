@@ -28,8 +28,8 @@ public interface NoticeService {
 
     /* ============ 前台（公开） ============ */
 
-    /** 公告分页列表：仅已发布，按发布时间倒序 */
-    List<NoticeListVO> listPublished(Integer current, Integer size);
+    /** 公告分页列表：仅已发布，按发布时间倒序（Page 对象含 records/total，供前端分页） */
+    Page<NoticeListVO> listPublished(Integer current, Integer size);
 
     /** 最新 N 条公告（首页展示），count 上限 10 */
     List<NoticeListVO> latest(Integer count);

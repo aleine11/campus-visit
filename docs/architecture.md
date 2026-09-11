@@ -548,7 +548,16 @@ public class GlobalExceptionHandler {
 | current | Integer | 否 | 1 | 页码 |
 | size | Integer | 否 | 10 | 每页条数 |
 
-**响应（NoticeListVO 列表分页）**：
+**响应（Result&lt;Page&lt;NoticeListVO&gt;&gt; 分页对象，与全站分页接口结构统一）**：
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| records | NoticeListVO[] | 当前页公告列表 |
+| total | Long | 总条数（前端分页条用） |
+| current | Long | 当前页码 |
+| size | Long | 每页条数 |
+
+records 数组内单条结构：
 
 | 字段 | 类型 | 说明 |
 |------|------|------|

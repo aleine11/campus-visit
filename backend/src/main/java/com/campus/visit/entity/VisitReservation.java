@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.Version;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,10 +18,10 @@ import java.time.LocalDateTime;
  * 状态字典 D4：0=待审核，1=通过，2=驳回，3=已取消
  *
  * 状态流转：
- *   访客提交 → 0(待审核)
- *   管理员审核通过 → 1(通过)
- *   管理员驳回 → 2(驳回)，必填 reject_reason
- *   访客主动取消 → 3(已取消)，仅 status=0 可取消
+ * 访客提交 → 0(待审核)
+ * 管理员审核通过 → 1(通过)
+ * 管理员驳回 → 2(驳回)，必填 reject_reason
+ * 访客主动取消 → 3(已取消)，仅 status=0 可取消
  */
 @Data
 @NoArgsConstructor
@@ -52,6 +53,19 @@ public class VisitReservation {
 
     /** 订单状态：0=待审核，1=通过，2=驳回，3=已取消 */
     private Integer status;
+
+    /**
+     * 乐观锁版本号（MP 乐观锁插件自动维护）
+     *
+     * ⭐ 为什么订单表必须有它：
+     * audit/cancel 都是"先查 status 再 updateById"的两步操作，
+     * 并发时两个管理员/访客可能同时通过状态检查 → 没有 version 就会双双成功，
+     * 导致重复回滚名额（驳回/取消）→ 账实不一致甚至超卖。
+     * 加上 @Version 后 updateById 自动追加 AND version = ?，
+     * 后到者影响行数=0 → Service 里的 rows==0 检查真正生效 → 40022。
+     */
+    @Version
+    private Integer version;
 
     /** 提交时间 */
     private LocalDateTime submitTime;

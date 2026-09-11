@@ -55,7 +55,7 @@ public class NoticeServiceImpl implements NoticeService {
      * status=1 手动写在 Wrapper 里；deleted=0 由 @TableLogic 自动追加
      */
     @Override
-    public List<NoticeListVO> listPublished(Integer current, Integer size) {
+    public Page<NoticeListVO> listPublished(Integer current, Integer size) {
         // 分页参数兜底（防 null / 非法值，GET 参数可以不传）
         int page = (current == null || current < 1) ? 1 : current;
         int rows = (size == null || size < 1) ? 10 : size;
@@ -68,9 +68,12 @@ public class NoticeServiceImpl implements NoticeService {
                 .orderByDesc(CampusNotice::getPublishTime);      // 按发布时间倒序（最新在前）
 
         // selectPage：返回的 Page 对象里既有记录列表也有 totalCount
-        List<CampusNotice> records = noticeMapper.selectPage(p, wrapper).getRecords();
+        Page<CampusNotice> result = noticeMapper.selectPage(p, wrapper);
 
-        return records.stream().map(this::toListVO).toList();
+        // 转成 VO 分页对象返回（records=当前页数据，total=总条数，前端分页条要用）
+        Page<NoticeListVO> voPage = new Page<>(result.getCurrent(), result.getSize(), result.getTotal());
+        voPage.setRecords(result.getRecords().stream().map(this::toListVO).toList());
+        return voPage;
     }
 
     /**
