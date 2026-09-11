@@ -46,14 +46,32 @@
           />
           <span class="count-tip">单笔最多 50 人，当前可选上限 {{ peopleMax }} 人</span>
         </el-form-item>
-        <el-form-item label="参观事由" prop="reason">
+        <el-form-item label="参观事由" prop="reasonType">
+          <el-radio-group v-model="form.reasonType" class="reason-group">
+            <el-radio
+              v-for="r in REASON_OPTIONS"
+              :key="r"
+              :value="r"
+              class="reason-option"
+              :class="{ checked: form.reasonType === r }"
+            >
+              {{ r }}
+            </el-radio>
+            <el-radio :value="OTHER_FLAG" class="reason-option" :class="{ checked: form.reasonType === OTHER_FLAG }">
+              其他（需填写）
+            </el-radio>
+          </el-radio-group>
+          <!-- 选"其他"才展开输入框 -->
           <el-input
-            v-model="form.reason"
+            v-if="form.reasonType === OTHER_FLAG"
+            v-model="form.reasonCustom"
             type="textarea"
-            :rows="3"
+            :rows="2"
             maxlength="200"
             show-word-limit
-            placeholder="5~200 字，例如：高校招生咨询参观 / 校友返校 / 学术交流活动"
+            class="reason-other-input"
+            placeholder="请填写具体事由（5~200 字）"
+            @blur="revalidateReason"
           />
         </el-form-item>
         <el-form-item>
@@ -82,6 +100,8 @@
  * 人数上限取两者较小值：
  *   业务上限 50（后端注解）与剩余名额（查库才知道）→ el-input-number 动态 max
  *   例：场次剩 3 人 → 上限 3；场次剩 80 人 → 上限 50
+ *
+ * 参观事由：5 个常见预设选项（默认选中第一个，不打字直接可约）+ "其他"手填
  */
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -101,11 +121,27 @@ const formRef = ref(null)
 const submitting = ref(false)
 const session = ref(null)
 
+/**
+ * 参观事由预设选项（校园参观最常见的 5 类）
+ * 每个文案均 ≥5 个汉字，直接满足后端 5~200 字校验，选中即可提交、无需打字；
+ * 只有选"其他"时才需要手写。
+ */
+const REASON_OPTIONS = [
+  '高校招生咨询参观',
+  '校园开放日参观',
+  '校友返校参观',
+  '学术交流活动',
+  '研学实践活动',
+]
+/** "其他"选项的内部标记值（不会提交给后端） */
+const OTHER_FLAG = '__OTHER__'
+
 const form = reactive({
   realName: '', // 默认带出注册时的姓名
   phone: '', // 默认带出注册时的手机号
   peopleCount: 1,
-  reason: '',
+  reasonType: REASON_OPTIONS[0], // 默认选中最常见的"高校招生咨询参观"，进页面即可直接提交
+  reasonCustom: '', // 仅"其他"时使用
 })
 
 /** 业务上限（≤50）与剩余名额取较小 */
@@ -114,12 +150,35 @@ const peopleMax = computed(() => {
   return Math.min(50, session.value.remaining)
 })
 
-// 基础规则 + 人数必填
+/**
+ * 事由校验：预设选项天然合法（进页面默认已选）；
+ * 仅当选"其他"时，才校验手填内容非空且 5~200 字。
+ */
+function validateReason(_rule, _value, callback) {
+  if (form.reasonType === OTHER_FLAG) {
+    const v = (form.reasonCustom || '').trim()
+    if (!v) return callback(new Error('请填写具体事由'))
+    if (v.length < 5 || v.length > 200) return callback(new Error('事由长度须在 5~200 字之间'))
+  }
+  callback()
+}
+
+// 基础规则 + 人数必填 + 事由条件校验
 const formRules = {
   realName: rules.realName,
   phone: rules.phone,
   peopleCount: [{ required: true, message: '请填写参观人数', trigger: 'blur' }],
-  reason: rules.reason,
+  reasonType: [{ validator: validateReason, trigger: 'change' }],
+}
+
+/** 手填事由失焦时立即重新校验（输入框是条件渲染的，需主动触发） */
+function revalidateReason() {
+  formRef.value?.validateField('reasonType')
+}
+
+/** 最终提交给后端的事由：预设直接用文案，其他用手写内容 */
+function finalReason() {
+  return form.reasonType === OTHER_FLAG ? form.reasonCustom.trim() : form.reasonType
 }
 
 onMounted(async () => {
@@ -163,7 +222,7 @@ async function handleSubmit() {
       realName: form.realName,
       phone: form.phone,
       peopleCount: form.peopleCount,
-      reason: form.reason,
+      reason: finalReason(),
     })
     ElMessage.success('预约提交成功，等待管理员审核')
     router.push('/visitor/reservation/list')
@@ -210,5 +269,46 @@ async function handleSubmit() {
   margin-left: 10px;
   font-size: 12px;
   color: #c0c4cc;
+}
+
+/* ===== 参观事由：选项卡片式单选 ===== */
+.reason-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  width: 100%;
+}
+/* 整块卡片可点 */
+.reason-option {
+  margin: 0;
+  height: 40px;
+  padding: 0 16px;
+  border: 1.5px solid #dcdfe6;
+  border-radius: 8px;
+  background: #fff;
+  transition: all 0.2s;
+  user-select: none;
+}
+.reason-option:hover {
+  border-color: #79b8ff;
+  color: #409eff;
+}
+.reason-option.checked {
+  border-color: #409eff;
+  background: #ecf5ff;
+  color: #409eff;
+  font-weight: 600;
+}
+/* 去掉 Element-Plus radio 默认圆点，选中态用卡片颜色表达 */
+.reason-option :deep(.el-radio__input) {
+  display: none;
+}
+.reason-option :deep(.el-radio__label) {
+  padding-left: 0;
+  font-size: 14px;
+}
+.reason-other-input {
+  margin-top: 12px;
+  width: 100%;
 }
 </style>
